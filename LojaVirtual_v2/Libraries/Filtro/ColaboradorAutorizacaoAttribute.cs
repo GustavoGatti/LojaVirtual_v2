@@ -9,8 +9,16 @@ using System.Threading.Tasks;
 
 namespace LojaVirtual_v2.Libraries.Filtro
 {
+
+
     public class ColaboradorAutorizacaoAttribute: Attribute, IAuthorizationFilter
     {
+        private string _tipoColaboradorAutorizado;
+        public ColaboradorAutorizacaoAttribute(string TipoColaboradorAutorizado = "C")
+        {
+            this._tipoColaboradorAutorizado = TipoColaboradorAutorizado;
+        }
+
         LoginColaborador _loginColaborador;
         public void OnAuthorization(AuthorizationFilterContext context)
         {
@@ -19,6 +27,13 @@ namespace LojaVirtual_v2.Libraries.Filtro
             if (colaborador == null)
             {
                 context.Result = new RedirectToActionResult("Login", "Home", null);
+            }
+            else
+            {
+                if (colaborador.Tipo == "C" && _tipoColaboradorAutorizado == "G")
+                {
+                    context.Result = new ForbidResult();
+                }
             }
 
         }

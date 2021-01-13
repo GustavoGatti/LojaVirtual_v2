@@ -20,17 +20,8 @@
         <input asp-for="Email" class="form-control" placeholder="Digite o e-mail do colaborador">
         <span asp-validation-for="Email" class="text-danger">  </span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Senha" class="form-label">Senha</label>
-        <input asp-for="Senha" class="form-control" placeholder="Digite a senha do colaborador">
-        <span asp-validation-for="Senha" class="text-danger">  </span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="ConfirmarSenha" class="form-label">Confirmar Senha</label>
-        <input type="password" asp-for="ConfirmarSenha" class="form-control" placeholder="Digite novamente a senha">
-        <span asp-validation-for="ConfirmarSenha" class="text-danger">  </span>
-    </div>
+
 
     <button type="submit" class="btn btn-primary">Salvar</button>
-    <button type="button" asp-action="Index" class="btn btn-info">Voltar</button>
+    <button asp-action="Index" class="btn btn-info">Voltar</button>
 </form>

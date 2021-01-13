@@ -36,6 +36,7 @@
                         <td>@colaborador.Nome</td>
                         <td>@colaborador.Email</td>
                         <td>
+                            <a asp-action="GerarSenha" asp-route-id="@colaborador.Id" class="btn btn-secondary">Gerar Senha</a>
                             <a asp-action="Atualizar" asp-route-id="@colaborador.Id" class="btn btn-secondary">Atualizar</a>
                             <a asp-action="Excluir" asp-route-id="@colaborador.Id" class="btn btn-danger">Excluir</a>
                         </td>

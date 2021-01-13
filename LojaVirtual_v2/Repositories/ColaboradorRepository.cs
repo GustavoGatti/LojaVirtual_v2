@@ -1,6 +1,7 @@
 ﻿using LojaVirtual_v2.Database;
 using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,16 @@ namespace LojaVirtual_v2.Repositories
         public void Atualizar(Colaborador colaborador)
         {
             this._banco.Colaboradores.Update(colaborador);
+            this._banco.Entry(colaborador).Property(a => a.Senha).IsModified = false;
+            this._banco.SaveChanges();
+        }
+
+        public void AtualizarSenha(Colaborador colaborador)
+        {
+            this._banco.Colaboradores.Update(colaborador);
+            this._banco.Entry(colaborador).Property(a => a.Nome).IsModified = false;
+            this._banco.Entry(colaborador).Property(a => a.Email).IsModified = false;
+            this._banco.Entry(colaborador).Property(a => a.Tipo).IsModified = false;
             this._banco.SaveChanges();
         }
 
@@ -61,6 +72,11 @@ namespace LojaVirtual_v2.Repositories
             int NumeroPagina = pagina ?? 1;
             return this._banco.Colaboradores.Where(a => a.Tipo != "G")
                 .ToPagedList<Colaborador>(NumeroPagina, this._conf.GetValue<int>("RegistroPorPagina"));
+        }
+
+        public List<Colaborador> ObterColaboradorPorEmail(string Email)
+        {
+            return this._banco.Colaboradores.Where(x => x.Email == Email).AsNoTracking().ToList();
         }
     }
 }

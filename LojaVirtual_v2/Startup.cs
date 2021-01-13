@@ -1,4 +1,5 @@
 using LojaVirtual_v2.Database;
+using LojaVirtual_v2.Libraries.Email;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Libraries.Sessao;
 using LojaVirtual_v2.Repositories;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace LojaVirtual_v2
@@ -41,6 +44,25 @@ namespace LojaVirtual_v2
             //Configuração sessão
 
             services.AddMemoryCache();//guardar os dados na memoria
+
+            /*
+             * STMP
+             */
+            services.AddScoped<SmtpClient>(options =>
+            {
+                SmtpClient smtp = new SmtpClient()
+                {
+                    Host = Configuration.GetValue<string>("Email:ServerSMTP"),
+                    Port = Configuration.GetValue<int>("Email:ServerPort"),
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(Configuration.GetValue<string>("Email:UserName"),
+                                                        Configuration.GetValue<string>("Email:Password")),
+                    EnableSsl = true
+                };
+                return smtp;
+            });
+
+            services.AddScoped<GerenciarEmail>();
             services.AddSession(options=>
             {
             });

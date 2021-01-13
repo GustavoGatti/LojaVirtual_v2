@@ -11,8 +11,12 @@ namespace LojaVirtual_v2.Repositories.Contracts
     {
         void Cadastrar(Colaborador colaborador);
 
+        void AtualizarSenha(Colaborador colaborador);
         void Atualizar(Colaborador colaborador);
         void Excluir(int Id);
+
+        List<Colaborador> ObterColaboradorPorEmail(string Email);
+
         Colaborador Login(string Email, string Senha);
         List<Colaborador> ObterTodosColaborador();
         Colaborador ObterColaborador(int Id);
