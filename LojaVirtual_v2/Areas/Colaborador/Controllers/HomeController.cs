@@ -47,7 +47,7 @@ namespace LojaVirtual_v2.Areas.Colaborador.Controllers
             }
         }
 
-        [ClienteAutorizacao]
+        [ColaboradorAutorizacao]
         public IActionResult Painel()
         {
             return View();
@@ -63,7 +63,7 @@ namespace LojaVirtual_v2.Areas.Colaborador.Controllers
             return View();
         }
 
-        [ClienteAutorizacao]
+        [ColaboradorAutorizacao]
         public IActionResult Logout()
         {
             _loginColaborador.Logout();

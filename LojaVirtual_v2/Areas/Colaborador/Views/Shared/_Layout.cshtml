@@ -12,8 +12,11 @@
 
 
 
+
     <!-- Bootstrap core CSS -->
+    <link href="~/resources/lib/pagedlist/PagedList.css" rel="stylesheet" type="text/css">
     <link href="~/resources/lib/bootstrap-4.2.1-dist/css/bootstrap.min.css" rel="stylesheet">
+
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
@@ -26,24 +29,24 @@
 
 
     <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @@media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
-      }
+
+        @@media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
     </style>
 
 
-    <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="~/resources/lib/dashboard/dashboard.css" rel="stylesheet">
 </head>
 <body>
 
@@ -138,9 +141,9 @@
                     </ul>
                 </div>
             </nav>
+   
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-
+            <main style="margin-left: 16%" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 @RenderBody()
             </main>
         </div>
@@ -149,6 +152,7 @@
 
     <script src="~/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"></script>
     <script>window.JQuery || document.write('<script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"><\/script>')</script>
+    <script src="~/Js/Actions.js"></script>
     <script src="~/resources/lib/bootstrap-4.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/resources/lib/feather/feather.js"></script>
     <script src="~/resources/lib/charts/charts.js"></script>

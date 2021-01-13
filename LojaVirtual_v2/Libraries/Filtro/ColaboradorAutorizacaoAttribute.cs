@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LojaVirtual_v2.Libraries.Filtro
 {
-    public class ColaboradorAutorizacaoAttribute: IAuthorizationFilter
+    public class ColaboradorAutorizacaoAttribute: Attribute, IAuthorizationFilter
     {
         LoginColaborador _loginColaborador;
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -18,7 +18,7 @@ namespace LojaVirtual_v2.Libraries.Filtro
             Colaborador colaborador = this._loginColaborador.GetCliente();
             if (colaborador == null)
             {
-                context.Result = new ContentResult() { Content = "Acesso negado" };
+                context.Result = new RedirectToActionResult("Login", "Home", null);
             }
 
         }

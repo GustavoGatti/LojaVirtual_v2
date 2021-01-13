@@ -36,6 +36,7 @@ namespace LojaVirtual_v2
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
             services.AddScoped<INewletterRepository, NewsletterRepository>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
             //Configuração sessão
 
