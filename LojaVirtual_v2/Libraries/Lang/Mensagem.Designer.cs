@@ -106,6 +106,15 @@ namespace LojaVirtual_v2.Libraries.Lang {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O valor do campo {0} não se encontra entre {1} e {2}.
+        /// </summary>
+        public static string MSG_E006 {
+            get {
+                return ResourceManager.GetString("MSG_E006", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Registro salvo com sucesso!.
         /// </summary>
         public static string MSG_S001 {

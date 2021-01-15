@@ -17,6 +17,8 @@
     <!-- Bootstrap core CSS -->
     <link href="~/resources/lib/pagedlist/PagedList.css" rel="stylesheet" type="text/css">
     <link href="~/resources/lib/bootstrap-4.2.1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/StyleSheet.css" rel="stylesheet">
+
 
 
     <!-- Favicons -->
@@ -87,11 +89,11 @@
                                 Produtos
                             </a>
                         </li>
-                        @{ 
+                        @{
                             /*è get colaborador, mesmo o nome estando cliente, isso é pq eu to com preguiça de arrumar */
                         }
 
-                        @if (colaborador.GetCliente().Tipo == "G")
+                        @if (colaborador.GetCliente() != null && colaborador.GetCliente().Tipo == ColaboradorTipoConstante.Gerente)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-action="Index" asp-controller="Colaborador">
@@ -102,14 +104,14 @@
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" asp-controller="Cliente" asp-action="Index">
                                 <span data-feather="users"></span>
                                 Clientes
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">
-                             <span data-feather="file"></span>
+                                <span data-feather="file"></span>
                                 Pedidos
                             </a>
                         </li>
@@ -156,7 +158,7 @@
                     </ul>
                 </div>
             </nav>
-   
+
 
             <main style="margin-left: 16%" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 @RenderBody()
@@ -167,10 +169,11 @@
 
     <script src="~/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"></script>
     <script>window.JQuery || document.write('<script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"><\/script>')</script>
-    <script src="~/Js/Actions.js"></script>
+    <script src="~/resources/lib/Mask/jquery.mask.min.js"></script>
     <script src="~/resources/lib/bootstrap-4.2.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/resources/lib/feather/feather.js"></script>
     <script src="~/resources/lib/charts/charts.js"></script>
     <script src="~/resources/lib/dashboard/dashboard.js"></script>
+    <script src="~/Js/Actions.js"></script>
 </body>
 </html>

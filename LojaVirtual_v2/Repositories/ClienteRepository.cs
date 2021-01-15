@@ -1,17 +1,21 @@
 ﻿using LojaVirtual_v2.Database;
 using LojaVirtual_v2.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace LojaVirtual_v2.Repositories
 {
     public class ClienteRepository : IClienteRepository
     {
         public LojaVirtualContext _banco;
-        public ClienteRepository(LojaVirtualContext banco)
+        private IConfiguration _conf;
+        public ClienteRepository(LojaVirtualContext banco, IConfiguration conf)
         {
+            this._conf = conf;
             this._banco = banco;
         }
 
@@ -46,10 +50,18 @@ namespace LojaVirtual_v2.Repositories
             return (this._banco.cliente.Find(Id));
         }
 
-        public List<Cliente> ObterTodosClientes()
+        public IPagedList<Cliente> ObterTodosClientes(int? pagina, string pesquisa)
         {
+            var bancoCliente = _banco.cliente.AsQueryable();
 
-            return (this._banco.cliente.ToList());
+            if (!string.IsNullOrEmpty(pesquisa))
+            {
+                //ñ vazio
+                bancoCliente = bancoCliente.Where(x => x.Nome.Contains(pesquisa.Trim()) || x.Email.Contains(pesquisa.Trim()));
+            }
+            int NumeroPagina = pagina ?? 1;
+            return bancoCliente.ToPagedList<Cliente>(NumeroPagina, this._conf.GetValue<int>("RegistroPorPagina"));
+            
         }
     }
 }

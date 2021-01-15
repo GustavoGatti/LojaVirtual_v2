@@ -1,0 +1,137 @@
+﻿@model LojaVirtual_v2.Models.Produto
+@{
+    ViewData["Title"] = "CadastrarProduto";
+    
+}
+
+
+<h1>Cadastrar</h1>
+
+<form method="post">
+
+    
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="CategoriaId" class="form-label"></label>
+            <select asp-for="CategoriaId" class="form-control" asp-items="@ViewBag.Categorias">
+                <option value="">Selecione</option>
+
+            </select>
+            <span asp-validation-for="CategoriaId" class="text-danger">  </span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Nome" class="form-label">Nome</label>
+            <input asp-for="Nome" class="form-control" placeholder="Digite o nome do produto" />
+            <span asp-validation-for="Nome" class="text-danger">  </span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Descricao" class="form-label"></label>
+        <textarea asp-for="Descricao" class="form-control"></textarea>
+        <span asp-validation-for="Descricao" class="text-danger">  </span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="Quantidade" class="form-label"></label>
+            <div class="input-group mb2">
+
+                <input asp-for="Quantidade" class="form-control" typeof="number" placeholder="Digite a quantidade de produtos" />
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        Unid
+                    </div>
+                </div>
+            </div>
+            <span asp-validation-for="Quantidade" class="text-danger">  </span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Valor" class="form-label"></label>
+            <div class="input-group mb2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        R$
+                    </div>
+                </div>
+                <input asp-for="Valor" class="form-control dinheiro" placeholder="Digite o preço do produto" />
+            </div>
+
+            <span asp-validation-for="Valor" class="text-danger">  </span>
+        </div>
+    </div>
+   
+
+    <h2>Frete</h2>
+    <!--Frete-->
+    <div class="row">
+        <div class="from-group col-md-3">
+            <label asp-for="Peso" class="form-label"></label>
+            <div class="input-group mb2">
+
+                <input asp-for="Peso" typeof="number" class="form-control" />
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        Kg
+                    </div>
+                </div>
+            </div>
+            <span asp-validation-for="Peso" class="text-danger">  </span>
+        </div>
+        <div  class=" from-group col-md-3">
+            <label asp-for="Largura"  class="form-label"></label>
+            <div class="input-group mb2">
+
+                <input asp-for="Largura" class="form-control" typeof="number" />
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        CM
+                    </div>
+                </div>
+            </div>
+            <span asp-validation-for="Largura" class="text-danger">  </span>
+        </div>
+        <div class="from-group col-md-3">
+            <label asp-for="Altura"  class="form-label"></label>
+            <div class="input-group mb2">
+
+                <input asp-for="Altura" class="form-control" typeof="number" />
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        CM
+                    </div>
+                </div>
+            </div>
+            <span asp-validation-for="Altura" class="text-danger">  </span>
+        </div>
+        <div  class="from-group col-md-3">
+            <label asp-for="Comprimento" class="form-label"></label>
+            <div class="input-group mb2">
+
+                <input asp-for="Comprimento" typeof="number" class="form-control" />
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        CM
+                    </div>
+                </div>
+            </div>
+            <span asp-validation-for="Comprimento" class="text-danger">  </span>
+        </div>
+    </div>
+    
+
+    <div class="row Imagens">
+        @for (int i = 0; i < 12; i++)
+        {
+            <div class="col-md-2">
+                <img src="/img/logoOnePiece.png" class="img-thumbnail"/>
+                <div class="btn btn-danger btn-imagem-excluir">
+                    X
+                </div>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Index"  class="btn btn-info">Voltar</a>
+</form>

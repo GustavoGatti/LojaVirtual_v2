@@ -1,6 +1,7 @@
 using LojaVirtual_v2.Database;
 using LojaVirtual_v2.Libraries.Email;
 using LojaVirtual_v2.Libraries.Login;
+using LojaVirtual_v2.Libraries.Middleware;
 using LojaVirtual_v2.Libraries.Sessao;
 using LojaVirtual_v2.Repositories;
 using LojaVirtual_v2.Repositories.Contracts;
@@ -40,6 +41,8 @@ namespace LojaVirtual_v2
             services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
             services.AddScoped<INewletterRepository, NewsletterRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            services.AddScoped<IImagemRepository, ImagemRepository>();
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
             //Configuração sessão
 
@@ -95,6 +98,7 @@ namespace LojaVirtual_v2
             app.UseAuthorization();
             app.UseCookiePolicy();
             app.UseSession();
+            app.UseMiddleware<ValidateAntiForgeryTokenMiddleware>();
 
 
             app.UseEndpoints(endpoints =>

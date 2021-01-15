@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace LojaVirtual_v2.Repositories
 {
@@ -15,6 +16,6 @@ namespace LojaVirtual_v2.Repositories
         void Atualizar(Cliente cliente);
         void Excluir(int Id);
         Cliente ObterCliente(int Id);
-        List<Cliente> ObterTodosClientes();
+        IPagedList<Cliente> ObterTodosClientes(int? pagina, string pesquisa);
     }
 }
