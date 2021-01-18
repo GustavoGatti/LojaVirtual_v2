@@ -118,16 +118,45 @@
         </div>
     </div>
 
+    @using LojaVirtual_v2.Models;
+    @{
+        List<Imagem> Imagens = new List<Imagem>();
 
-    <div class="row Imagens">
+        if (Model != null)
+        {
+            Imagens = Model.Imagems.ToList();
+        }
+
+    }
+
+    <div style="margin-top:2%" class="row Imagens">
         @for (int i = 0; i < 12; i++)
         {
-            <div class="col-md-2">
-                <img src="/img/logoOnePiece.png" class="img-thumbnail" />
-                <div class="btn btn-danger btn-imagem-excluir">
-                    X
+
+            @if (Imagens.ElementAtOrDefault(i) != null)
+            {
+                <div class="col-md-2">
+                    <input type="file" class="input-file" />
+                    <img src="@Imagens.ElementAtOrDefault(i).Caminho" class="img-thumbnail img-upload" />
+                    <div class="btn btn-danger btn-imagem-excluir btn-ocultar">
+                        X
+                    </div>
+                    <input type="text" name="imagem" value="@Imagens.ElementAtOrDefault(i).Caminho" />
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="col-md-2">
+                    <input type="file" class="input-file" />
+                    <img src="~/img/logoOnePiece.png" class="img-thumbnail img-upload" />
+                    <div class="btn btn-danger btn-imagem-excluir btn-ocultar">
+                        X
+                    </div>
+                    <input type="text" name="imagem" />
+                </div>
+            }
+
+
         }
     </div>
 

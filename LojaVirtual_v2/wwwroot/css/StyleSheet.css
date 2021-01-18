@@ -8,14 +8,32 @@
 
 .Imagens .btn-imagem-excluir {
     width: 100% !important;
-    margin-bottom: 5%;
+
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
 }
 
-.Imagens .div{
+.Imagens .btn-ocultar{
+    display: none;
+}
+
+.Imagens .col-md-2 {
+    margin-bottom: 2%;
+}
+
+.Imagens .div {
     text-align: center;
 }
 .Imagens .img-thumbnail{
     width: 100%;
+}
+
+.Imagens .input-file {
+    display: none;
+}
+.Imagens .img-upload {
+    cursor: pointer !important;
+}
+.Imagens input[name=imagem]{
+    display: none;
 }

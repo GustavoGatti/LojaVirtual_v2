@@ -1,4 +1,5 @@
-﻿using LojaVirtual_v2.Libraries.Lang;
+﻿using LojaVirtual_v2.Libraries.Arquivo;
+using LojaVirtual_v2.Libraries.Lang;
 using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,13 @@ namespace LojaVirtual_v2.Areas.Colaborador.Controllers
     {
         private IProdutoRepository _produtoRepository;
         private ICategoriaRepository _categoria;
+        private IImagemRepository _imagemRepository;
 
-        public ProdutoController(IProdutoRepository produtoRepository, ICategoriaRepository categoria)
+        public ProdutoController(IProdutoRepository produtoRepository, ICategoriaRepository categoria, IImagemRepository imagemRepository)
         {
             this._produtoRepository = produtoRepository;
             this._categoria = categoria;
+            this._imagemRepository = imagemRepository;
         }
 
         public IActionResult Index(int? pagina, string pesquisa)
@@ -40,12 +43,26 @@ namespace LojaVirtual_v2.Areas.Colaborador.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Caminho temp para mover a imagem para o caminho definitivo
                 this._produtoRepository.Cadastrar(produto);
+               
+               List<Imagem> CaminhoDefinitivo =  GerenciadorArquivo
+                    .MoverImagensProduto(new List<string>(Request.Form["imagem"]), produto.Id);
+
+                // Salvar o caminho definitivo no banco de dados
+                this._imagemRepository.CadastrarImagens(CaminhoDefinitivo, produto.Id);
+
                 TempData["MSG_S"] = Mensagem.MSG_S001;
                 return RedirectToAction(nameof(Index));
             }
-
-            return View();
+            else
+            {
+                
+                ViewBag.Categorias = this._categoria.ObterTodasCategorias().Select(x => new SelectListItem(x.Nome, x.ID.ToString()));
+                produto.Imagems = new List<string>(Request.Form["imagem"]).Where(x => x.Trim().Length > 0).Select(x => new Imagem() { Caminho = x }).ToList();
+                return View(produto);
+            }
+           
         }
 
         [HttpGet]
@@ -61,12 +78,29 @@ namespace LojaVirtual_v2.Areas.Colaborador.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Caminho temp para mover a imagem para o caminho definitivo
                 this._produtoRepository.Atualizar(produto);
-                TempData["MSG_S"] = Mensagem.MSG_S002;
+
+                // Alterar Mover imagens, precisa alterar somente as imagens q estao na pasta temp
+
+                List<Imagem> CaminhoDefinitivo = GerenciadorArquivo
+                     .MoverImagensProduto(new List<string>(Request.Form["imagem"]), produto.Id);
+
+                this._imagemRepository.ExcluirImagemDoProduto(produto.Id);
+
+                // Salvar o caminho definitivo no banco de dados
+                this._imagemRepository.CadastrarImagens(CaminhoDefinitivo, produto.Id);
+
+                TempData["MSG_S"] = Mensagem.MSG_S001;
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Categorias = this._categoria.ObterTodasCategorias().Select(x => new SelectListItem(x.Nome, x.ID.ToString()));
-            return View(produto);
+            else
+            {
+
+                ViewBag.Categorias = this._categoria.ObterTodasCategorias().Select(x => new SelectListItem(x.Nome, x.ID.ToString()));
+                produto.Imagems = new List<string>(Request.Form["imagem"]).Where(x => x.Trim().Length > 0).Select(x => new Imagem() { Caminho = x }).ToList();
+                return View(produto);
+            }
         }
     }
 }

@@ -41,5 +41,17 @@ namespace LojaVirtual_v2.Repositories
             }
             this._banco.SaveChanges();
         }
+
+        public void CadastrarImagens(List<Imagem> CaminhoImagens, int id)
+        {
+            if(CaminhoImagens != null && CaminhoImagens.Count > 0)
+            {
+                foreach (var CaminhoDef in CaminhoImagens)
+                {
+                    Cadastrar(CaminhoDef);
+                }
+            }
+            
+        }
     }
 }
