@@ -69,11 +69,15 @@ namespace LojaVirtual_v2
             services.AddSession(options=>
             {
             });
+          
             services.AddScoped<Sessao>();
             services.AddScoped<LoginCliente>();
             services.AddScoped<LoginColaborador>();
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(x => "O campo deve ser preenchido!");
+            });
             services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(connection));
         }
 

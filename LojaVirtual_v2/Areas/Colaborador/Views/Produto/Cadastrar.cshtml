@@ -131,18 +131,18 @@
 
     }
 
+
     <div style="margin-top:2%" class="row Imagens">
         @for (int i = 0; i < 12; i++)
         {
-
             @if (Imagens.ElementAtOrDefault(i) != null)
             {
                 <div class="col-md-2">
                     <input type="file" class="input-file" />
-                    <img src="@Imagens.ElementAtOrDefault(i).Caminho" class="img-thumbnail img-upload" />
-                    <div class="btn btn-danger btn-imagem-excluir btn-ocultar">
-                        X
+                    <div class="container-img-thumbnail">
+                        <img src="@Imagens.ElementAtOrDefault(i).Caminho" class="img-thumbnail img-upload" />
                     </div>
+                    <div class="btn btn-danger btn-imagem-excluir">X</div>
                     <input type="text" name="imagem" value="@Imagens.ElementAtOrDefault(i).Caminho" />
                 </div>
             }
@@ -150,15 +150,13 @@
             {
                 <div class="col-md-2">
                     <input type="file" class="input-file" />
-                    <img src="~/img/logoOnePiece.png" class="img-thumbnail img-upload" />
-                    <div class="btn btn-danger btn-imagem-excluir btn-ocultar">
-                        X
+                    <div class="container-img-thumbnail">
+                        <img src="~/img/logoOnePiece.png" class="img-thumbnail img-upload" />
                     </div>
+                    <div class="btn btn-danger btn-imagem-excluir btn-ocultar">X</div>
                     <input type="text" name="imagem" />
                 </div>
             }
-
-
         }
     </div>
 

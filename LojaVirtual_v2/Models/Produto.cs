@@ -50,6 +50,7 @@ namespace LojaVirtual_v2.Models
         //Fluent Api - Attributes
         //Banco de dados - Relacionamento entre tabela
         [Display(Name = "Categoria")]
+        [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E001")]
         public int CategoriaId { get; set; }
 
         [ForeignKey("CategoriaId")]

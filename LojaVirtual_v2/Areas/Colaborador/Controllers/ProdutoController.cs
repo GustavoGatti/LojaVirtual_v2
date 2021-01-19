@@ -1,4 +1,5 @@
 ﻿using LojaVirtual_v2.Libraries.Arquivo;
+using LojaVirtual_v2.Libraries.Filtro;
 using LojaVirtual_v2.Libraries.Lang;
 using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Repositories.Contracts;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace LojaVirtual_v2.Areas.Colaborador.Controllers
 {
     [Area("Colaborador")]
+    [ColaboradorAutorizacao]
     public class ProdutoController : Controller
     {
         private IProdutoRepository _produtoRepository;
@@ -102,5 +104,19 @@ namespace LojaVirtual_v2.Areas.Colaborador.Controllers
                 return View(produto);
             }
         }
+
+        [HttpGet]
+        [ValidateHttpReferer]
+        public IActionResult Excluir(int id)
+        {
+            //TODO - ler o produto, Deletar Imagens da Pasta, Deletar Imagens do Banco, Deletar o Produto 
+            Produto produto = this._produtoRepository.ObterProduto(id);
+            GerenciadorArquivo.ExcluirImagensProduto(produto.Imagems.ToList());
+            this._imagemRepository.ExcluirImagemDoProduto(id);
+            this._produtoRepository.Excluir(id);
+            TempData["MSG_S"] = Mensagem.MSG_S003;
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

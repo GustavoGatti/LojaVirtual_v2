@@ -1,9 +1,7 @@
-﻿
-$(document).ready(function () {
-
+﻿$(document).ready(function () {
     $(".btn-danger").click(function (e) {
-
         var resultado = confirm("Tem certeza que deseja realizar esta operação?");
+
         if (resultado == false) {
             e.preventDefault();
         }
@@ -15,60 +13,68 @@ $(document).ready(function () {
 
 function AjaxUploadImagemProduto() {
     $(".img-upload").click(function () {
-        $(this).parent().find(".input-file").click();
+        $(this).parent().parent().find(".input-file").click();
     });
-
-    
     $(".btn-imagem-excluir").click(function () {
-       
+        var CampoHidden = $(this).parent().find("input[name=imagem]");
         var Imagem = $(this).parent().find(".img-upload");
-        var CampoHidder = $(this).parent().find("input[name=imagem]");
         var BtnExcluir = $(this).parent().find(".btn-imagem-excluir");
         var InputFile = $(this).parent().find(".input-file");
+
         $.ajax({
             type: "GET",
-            url: "/Colaborador/Imagem/Deletar?caminho=" + CampoHidder.val(),
+            url: "/Colaborador/Imagem/Deletar?caminho=" + CampoHidden.val(),
             error: function () {
-                alert("Erro no envio do arquivo");
+
             },
             success: function () {
                 Imagem.attr("src", "/img/logoOnePiece.png");
                 BtnExcluir.addClass("btn-ocultar");
-                CampoHidder.val("");
+                CampoHidden.val("");
                 InputFile.val("");
             }
         });
     });
 
-
     $(".input-file").change(function () {
 
-        //Formulario de dados via js
-
+  
+        //Formulário de dados via JavaScript
         var Binario = $(this)[0].files[0];
-        var formulario = new FormData();
-        formulario.append("file", Binario);
+        var Formulario = new FormData();
+        Formulario.append("file", Binario);
+
 
         var CampoHidden = $(this).parent().find("input[name=imagem]");
         var Imagem = $(this).parent().find(".img-upload");
         var BtnExcluir = $(this).parent().find(".btn-imagem-excluir");
-        //Requisicao ajax enviando o formulario
+
+         //Apresenta Imagem Loading
+
+        Imagem.attr("src", "/img/louding.gif");
+        Imagem.addClass("thumb");
+
+        //TODO - Requisição Ajax enviado a Formulario
         $.ajax({
             type: "POST",
             url: "/Colaborador/Imagem/Armazenar",
-            data: formulario,
+            data: Formulario,
             contentType: false,
             processData: false,
             error: function () {
-                alert("Erro no envio do arquivo");
+                alert("Erro no envio do arquivo!");
+                Imagem.attr("src", "/img/logoOnePiece.png");
+                Imagem.removeClass("thumb");
+
             },
-            success: function(data){
+            success: function (data) {
+               
                 var caminho = data.caminho;
                 Imagem.attr("src", caminho);
+                Imagem.removeClass("thumb");
                 CampoHidden.val(caminho);
                 BtnExcluir.removeClass("btn-ocultar");
             }
-
         });
     });
 }

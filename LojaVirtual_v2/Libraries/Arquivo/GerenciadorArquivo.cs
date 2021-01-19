@@ -77,6 +77,7 @@ namespace LojaVirtual_v2.Libraries.Arquivo
                             }
 
                             File.Copy(CaminhoAbsolutoTemp, CaminhoAbsolutoDef);
+
                             if (File.Exists(CaminhoAbsolutoDef))
                             {
                                 File.Delete(CaminhoAbsolutoTemp);
@@ -100,6 +101,23 @@ namespace LojaVirtual_v2.Libraries.Arquivo
             }
             return ListaCaminhoDef;
 
+        }
+
+        public static void ExcluirImagensProduto(List<Imagem> lists)
+        {
+            int ProdutoId = 0;
+            foreach( var imagem in lists)
+            {
+                ExcluirImagemProduto(imagem.Caminho);
+                ProdutoId = imagem.ProdutoId;
+            }
+
+            var PastaProduto = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", ProdutoId.ToString());
+
+            if (Directory.Exists(PastaProduto))
+            {
+                Directory.Delete(PastaProduto);
+            }
         }
     }
 }
