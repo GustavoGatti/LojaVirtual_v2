@@ -1,0 +1,35 @@
+﻿
+@{
+    var TodasCategorias = (List<LojaVirtual_v2.Models.Categoria>)ViewData["TodasCategorias"];
+    var CategoriaPai = (LojaVirtual_v2.Models.Categoria)ViewData["CategoriaPai"];
+
+    var categoriasFilho = TodasCategorias.Where(a => a.CategoriaPaiId == CategoriaPai.ID);
+}
+
+@if (categoriasFilho.Count() > 0)
+{
+    <li class="dropdown-submenu">
+        <a class="dropdown-item" tabindex="-1" href="#">@CategoriaPai.Nome</a>
+        <ul class="dropdown-menu">
+
+            @foreach (var categoriaF in categoriasFilho)
+            {
+                @if (TodasCategorias.Where(a => a.CategoriaPaiId == categoriaF.ID).Count() > 0)
+                {
+                    ViewData.Remove("CategoriaPai");
+                    //Submenu recursivo
+                    @await Html.PartialAsync("~/Views/Shared/Components/Menu/_SubMenu.cshtml", new ViewDataDictionary(ViewData) { { "CategoriaPai", categoriaF } })
+                }
+                else
+                {
+                    <li class="dropdown-item"><a href="#">@categoriaF.Nome</a></li>
+                }
+
+            }
+        </ul>
+    </li>
+}
+else
+{
+    <li class="dropdown-item"><a href="#">@CategoriaPai.Nome</a></li>
+}

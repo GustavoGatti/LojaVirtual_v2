@@ -3,6 +3,7 @@ using LojaVirtual_v2.Libraries.Email;
 using LojaVirtual_v2.Libraries.Filtro;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Models;
+using LojaVirtual_v2.Models.ViewModels;
 using LojaVirtual_v2.Repositories;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -22,22 +23,25 @@ namespace LojaVirtual_v2.Controllers
         private INewletterRepository _newsletterRepository;
         private LoginCliente _loginCliente;
         private GerenciarEmail _gerenciarEmail;
-        public HomeController(IClienteRepository repository, INewletterRepository newsletterRepository, LoginCliente loginCliente, GerenciarEmail gerenciarEmail)
+        private IProdutoRepository _produtoRepository;
+        public HomeController(IProdutoRepository produtoRepository, IClienteRepository repository, INewletterRepository newsletterRepository, LoginCliente loginCliente, GerenciarEmail gerenciarEmail)
         {
             this._repository = repository;
             this._newsletterRepository = newsletterRepository;
             this._loginCliente = loginCliente;
             this._gerenciarEmail = gerenciarEmail;
+            this._produtoRepository = produtoRepository;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? pagina, string pesquisa)
         {
-            return View();
+            var viewModel = new IndexViewModels() { lista = this._produtoRepository.ObterTodosProdutos(pagina, pesquisa) };
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Index([FromForm]NewsletterEmail newsletter)
+        public IActionResult Index([FromForm]NewsletterEmail newsletter, int? pagina, string pesquisa)
         {
 
             if (ModelState.IsValid)
@@ -45,14 +49,13 @@ namespace LojaVirtual_v2.Controllers
 
                 this._newsletterRepository.Cadastrar(newsletter);
 
-                TempData["MSG_S"] = "E-mail cadastrado! Agora você vai receber promoções especiais no seu e-mail! Fique atento as novidades!";
-                
-                //TODO - Adição no banco de dados
+                TempData["MSG_S"] = "E-mail cadastrado! Agora você vai receber promoções especiais no seu e-mail! Fique atento as novidades!";                
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                return View();
+                var viewModel = new IndexViewModels() { lista = this._produtoRepository.ObterTodosProdutos(pagina, pesquisa) };
+                return View(viewModel);
             }
         }
 
@@ -157,6 +160,11 @@ namespace LojaVirtual_v2.Controllers
         }
 
         public IActionResult CarrinhoCompras()
+        {
+            return View();
+        }
+
+        public IActionResult Categoria()
         {
             return View();
         }
