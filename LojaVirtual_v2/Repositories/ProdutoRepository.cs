@@ -44,20 +44,52 @@ namespace LojaVirtual_v2.Repositories
 
         public Produto ObterProduto(int id)
         {
-            return this._banco.Produtos.Include(x => x.Imagems).Where(x => x.Id == id).FirstOrDefault();
+            return this._banco.Produtos.Include(x => x.Imagems).OrderBy(x => x.Nome).Where(x => x.Id == id).FirstOrDefault();
         }
 
         public IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa)
         {
-            var bancoProduto = _banco.Produtos.AsQueryable();
 
+            return ObterTodosProdutos(pagina, pesquisa, "A", null);
+        }
+
+        public IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, IEnumerable<Categoria> categorias)
+        {
+           
+
+            int RegistroPorPagina = this._conf.GetValue<int>("RegistroPorPagina");
+            int NumeroPagina = pagina ?? 1;
+            var bancoProduto = _banco.Produtos.AsQueryable();
             if (!string.IsNullOrEmpty(pesquisa))
             {
 
                 bancoProduto = bancoProduto.Where(x => x.Nome.Contains(pesquisa.Trim()));
             }
-            int NumeroPagina = pagina ?? 1;
-            return bancoProduto.Include(x => x.Imagems).ToPagedList<Produto>(NumeroPagina, this._conf.GetValue<int>("RegistroPorPagina"));
+            if(ordenacao == "A")
+            {
+                bancoProduto = bancoProduto.OrderBy(a => a.Nome);
+            }
+            if (ordenacao == "MA")
+            {
+                bancoProduto = bancoProduto.OrderByDescending(a => a.Valor);
+            }
+            if (ordenacao == "ME")
+            {
+                bancoProduto = bancoProduto.OrderBy(a => a.Valor);
+            }
+
+            if(categorias != null && categorias.Count() > 0)
+            {
+
+                //1 - Informatica, 5 - Teclado, 
+                //SQL: where categoria in (1,5,....), sql da parte de baixo
+                bancoProduto = bancoProduto.Where(x => categorias.Select(y => y.ID).Contains(x.CategoriaId));
+            }
+
+            return bancoProduto.Include(x => x.Imagems).ToPagedList<Produto>(NumeroPagina, RegistroPorPagina);
         }
+
+
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LojaVirtual_v2.Models;
+using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,25 +10,33 @@ namespace LojaVirtual_v2.Controllers
 {
     public class ProdutoController : Controller
     {
-         
+        private ICategoriaRepository _categoriaRepository;
+        private IProdutoRepository _produtoRepository;
+     
 
-
-        public ActionResult Visualizar()
+        public ProdutoController(ICategoriaRepository categoriaRepository, IProdutoRepository produtoRepository)
         {
-            Produto produto = GetProduto();
-            //return new ContentResult() {Content = "Gustavo o rei do mundo", ContentType="text/html" };
-            return View(produto);
+            _categoriaRepository = categoriaRepository;
+            _produtoRepository = produtoRepository;
         }
 
-        private Produto GetProduto()
+        [HttpGet]
+        [Route("/Produto/Categoria/{slug}")]
+        public IActionResult ListagemCategoria(string slug)
         {
-            return new Produto()
-            {
-                Id=1,
-                Nome = "Cadeira Gamer",
-                Descricao = "Verde",
-                Valor = 200.000M
-            };
+           
+            return View(this._categoriaRepository.ObterTodasCategorias(slug));
+        }
+
+
+
+        /*------------------------------------------------*/
+        [HttpGet]
+        public ActionResult Visualizar(int id)
+        {
+            Produto produto = this._produtoRepository.ObterProduto(id);
+   
+            return View(produto);
         }
     }
 }

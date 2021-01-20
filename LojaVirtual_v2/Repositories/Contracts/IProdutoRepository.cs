@@ -13,6 +13,7 @@ namespace LojaVirtual_v2.Repositories.Contracts
         void Atualizar(Produto produto);
         void Excluir(int id);
         Produto ObterProduto(int id);
+        IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa, string ordenacao, IEnumerable<Categoria> categorias);
         IPagedList<Produto> ObterTodosProdutos(int? pagina, string pesquisa);
     }
 }

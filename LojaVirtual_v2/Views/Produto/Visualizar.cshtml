@@ -1,11 +1,104 @@
 ﻿@model LojaVirtual_v2.Models.Produto
 
 @{
+    ViewData["Title"] = "VisualizarProduto";
 }
 
-Eu vou comer geral askjashkjasa
+<section style="margin-top:5%" class="section-content bg padding-y-sm">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 col-md-9 col-sm-12">
 
-<h1>Id</h1>@Model.Id
-<h1>Nome</h1>@Model.Nome
-<h1>Valor</h1>@Model.Valor
-<h1>Descrição</h1>@Model.Descricao
+
+                <main class="card">
+                    <div class="row no-gutters">
+                        <aside class="col-sm-6 border-right">
+                            <article class="gallery-wrap">
+                                <div class="img-big-wrap">
+                                    <div>
+                                        @if (Model.Imagems != null && Model.Imagems.Count() > 0)
+                                        {
+                                            <a href="@Model.Imagems.ElementAt(0).Caminho" data-fancybox=""><img src="@Model.Imagems.ElementAt(0).Caminho"></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="~/img/oHobbit.jpg" data-fancybox=""><img src="~/img/oHobbit.jpg"></a>
+
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="img-small-wrap">
+                                    @if (Model.Imagems != null && Model.Imagems.Count() > 0)
+                                    {
+                                        @foreach (var Imagem in Model.Imagems)
+                                        {
+                                            <div class="item-gallery"> <img src="@Imagem.Caminho"></div>
+                                        }
+                                    }
+
+                                </div>
+                            </article>
+                        </aside>
+                        <aside class="col-sm-6">
+                            <article class="card-body">
+
+                                <h3 class="title mb-3">@Model.Nome</h3>
+
+                                <div class="mb-3">
+                                    <var class="price h3 text-warning">
+                                        <span class="currency"></span><span class="num">@Model.Valor.ToString("C")</span>
+                                    </var>
+                                    <span>/unid</span>
+                                </div>
+                                <dl>
+                                    <dt>Descrição</dt>
+                                    <dd>
+                                        <p>
+                                            @Model.Descricao
+                                        </p>
+                                    </dd>
+                                </dl>
+                                <dl class="row">
+                                    <dt class="col-sm-3">Peso(kg)</dt>
+                                    <dd class="col-sm-9">@Model.Peso</dd>
+
+                                    <dt class="col-sm-3">Largura</dt>
+                                    <dd class="col-sm-9">@Model.Largura</dd>
+
+                                    <dt class="col-sm-3">Altura</dt>
+                                    <dd class="col-sm-9">@Model.Altura</dd>
+
+                                    <dt class="col-sm-3">Comprimento</dt>
+                                    <dd class="col-sm-9">@Model.Comprimento</dd>
+
+                                    <dt class="col-sm-3">Quantidade em estoque</dt>
+                                    <dd class="col-sm-9">@Model.Quantidade</dd>
+                                </dl>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <dl class="dlist-inline">
+                                            <dt>Quantity: </dt>
+                                            <dd>
+                                                <select class="form-control form-control-sm" style="width:70px;">
+                                                    <option> 1 </option>
+                                                    <option> 2 </option>
+                                                    <option> 3 </option>
+                                                </select>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <hr>
+                                    <a href="#" class="btn btn-outline-primary"> <i class="fa fa-envelope"></i> Adicionar ao Carrinho </a>
+                                    <hr>
+                            </article>
+                        </aside>
+                    </div>
+                </main>
+
+
+            </div>
+        </div>
+    </div>
+</section>

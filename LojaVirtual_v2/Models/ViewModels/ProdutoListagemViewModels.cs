@@ -7,13 +7,13 @@ using X.PagedList;
 
 namespace LojaVirtual_v2.Models.ViewModels
 {
-    public class IndexViewModels
+    public class ProdutoListagemViewModels
     {
-        public NewsletterEmail newsletterEmail { get; set; }
         public IPagedList<Produto> lista { get; set; }
         public List<SelectListItem> ordenacao
         {
-            get {
+            get
+            {
                 return new List<SelectListItem>()
                 {
                     new SelectListItem("Alfabetica", "A"),
@@ -21,7 +21,7 @@ namespace LojaVirtual_v2.Models.ViewModels
                     new SelectListItem("Maior preço", "MA"),
                 };
             }
-            private set{} 
+            private set { }
         }
     }
 }

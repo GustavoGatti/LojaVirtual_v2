@@ -14,11 +14,12 @@
           crossorigin="anonymous">
     <link href="~/css/Stylesheet.css" rel="stylesheet" />
     <link href="~/resources/lib/pagedlist/PagedList.css" rel="stylesheet" />
+    <link href="~/resources/lib/bootstrap-ecommerce-uikit/ui-ecommerce/plugins/fancybox/fancybox.min.css" rel="stylesheet" />
     <title>@ViewBag.Title</title>
 </head>
 <body>
     <header>
-       @await Component.InvokeAsync("Menu")
+        @await Component.InvokeAsync("Menu")
     </header>
     <div>
         @RenderBody()
@@ -35,6 +36,8 @@
     <script src="/resources/lib/jquery3.3.1/jquery-3.3.1.min.js"></script>
     <script src="/resources/lib/popper1.14.6/popper.min.js"></script>
     <script src="/resources/lib/bootstrap-4.2.1-dist/js/bootstrap.min.js"></script>
+    <script src="/Js/ActionsVisitante.js"></script>
+    <script src="/resources/lib/bootstrap-ecommerce-uikit/ui-ecommerce/plugins/fancybox/fancybox.min.js"></script>
 </body>
 
 </html>

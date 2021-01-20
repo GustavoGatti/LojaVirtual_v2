@@ -1,9 +1,8 @@
-﻿@model LojaVirtual_v2.Models.ViewModels.IndexViewModels
-
+﻿@model LojaVirtual_v2.Models.NewsletterEmail
 @{
 
     ViewData["Title"] = "Index";
-    var pesquisa = Context.Request.Query["pesquisa"];
+
 }
 
 
@@ -68,47 +67,8 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    @if (Model.lista.Count > 0)
-    {
-        <div class="container" id="code_prod_complex">
-            <div class="row">
-                <div class="offset-md-10 col-md-2">
-                    <!--Ordenação Alfabetica, menor preço e maior preco-->
-                    <select id="ordenacao" asp-items="Model.ordenacao"></select>
-                </div>
-            </div>
-            <div class="row">
-                @foreach (var produto in Model.lista)
-                {
-                    <div class="col-md-4">
-                        <figure class="card card-product">
-                            <div class="img-wrap">
-                                @if (produto.Imagems != null && produto.Imagems.Count > 0)
-                                {
-                                    <img src="@produto.Imagems.ElementAt(0).Caminho" />
-                                }
-                                else
-                                {
-                                    <img src="~/img/oHobbit.jpg" />
-                                }
-                            </div>
-                            <figcaption class="info-wrap">
-                                <h4 class="title">@produto.Nome</h4>
-
-                            </figcaption>
-                            <div class="bottom-wrap">
-                                <a href="" class="btn btn-sm btn-primary float-right">Adicionar Carrinho</a>
-                                <div class="price-wrap h5">
-                                    <span class="price-new">@produto.Valor.ToString("C")</span>
-                                </div>
-                            </div>
-                        </figure>
-                    </div>
-                }
-            </div>
-            @Html.PagedListPager((IPagedList)Model.lista, pagina => Url.Action("Index", new { pagina = pagina, pesquisa = pesquisa }))
-        </div>
-    }
+   
+    <vc:produto-listagem></vc:produto-listagem>
 
 </main>
 
@@ -135,9 +95,9 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                         </div>
-                        @Html.EditorFor(m => m.newsletterEmail.Email, new { htmlAttributes = new { type = "text", @class = "form-control" } })
+                        @Html.EditorFor(m => m.Email, new { htmlAttributes = new { type = "text", @class = "form-control" } })
                     </div>
-                    <span style="color: red">@Html.ValidationMessageFor(m => m.newsletterEmail.Email)<!--Mostra todas a mensagens de erro um determinado campo depois da execucao--></span>
+                    <span style="color: red">@Html.ValidationMessageFor(m => m.Email)<!--Mostra todas a mensagens de erro um determinado campo depois da execucao--></span>
                 </div>
             </div>
             <div class="col-sm-2">

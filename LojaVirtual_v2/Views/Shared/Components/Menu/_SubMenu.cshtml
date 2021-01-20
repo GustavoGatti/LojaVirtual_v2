@@ -9,7 +9,7 @@
 @if (categoriasFilho.Count() > 0)
 {
     <li class="dropdown-submenu">
-        <a class="dropdown-item" tabindex="-1" href="#">@CategoriaPai.Nome</a>
+        <a class="dropdown-item" tabindex="-1" asp-controller="Produto" asp-action="ListagemCategoria" asp-route-slug="@CategoriaPai.Slug">@CategoriaPai.Nome</a>
         <ul class="dropdown-menu">
 
             @foreach (var categoriaF in categoriasFilho)
@@ -22,7 +22,7 @@
                 }
                 else
                 {
-                    <li class="dropdown-item"><a href="#">@categoriaF.Nome</a></li>
+                    <li class="dropdown-item"><a asp-controller="Produto" asp-action="ListagemCategoria" asp-route-slug="@categoriaF.Slug">@categoriaF.Nome</a></li>
                 }
 
             }
@@ -31,5 +31,5 @@
 }
 else
 {
-    <li class="dropdown-item"><a href="#">@CategoriaPai.Nome</a></li>
+    <li class="dropdown-item"><a asp-controller="Produto" asp-action="ListagemCategoria" asp-route-slug="@CategoriaPai.Slug">@CategoriaPai.Nome</a></li>
 }
