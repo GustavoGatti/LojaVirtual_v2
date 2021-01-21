@@ -1,5 +1,6 @@
 ﻿using LojaVirtual_v2.Database;
 using LojaVirtual_v2.Models;
+using LojaVirtual_v2.Models.ProdutoAgregador;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

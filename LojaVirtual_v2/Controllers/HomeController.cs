@@ -159,11 +159,6 @@ namespace LojaVirtual_v2.Controllers
             return View();
         }
 
-        public IActionResult CarrinhoCompras()
-        {
-            return View();
-        }
-
         public IActionResult Categoria()
         {
             return View();

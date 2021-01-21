@@ -2,6 +2,7 @@
 using LojaVirtual_v2.Libraries.Filtro;
 using LojaVirtual_v2.Libraries.Lang;
 using LojaVirtual_v2.Models;
+using LojaVirtual_v2.Models.ProdutoAgregador;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

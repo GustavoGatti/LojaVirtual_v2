@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using LojaVirtual_v2.Models.ProdutoAgregador;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LojaVirtual_v2.Models
 {

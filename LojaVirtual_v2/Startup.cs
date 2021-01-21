@@ -1,4 +1,7 @@
+using AutoMapper;
 using LojaVirtual_v2.Database;
+using LojaVirtual_v2.Libraries.AutoMapper;
+using LojaVirtual_v2.Libraries.CarrinhoCompra;
 using LojaVirtual_v2.Libraries.Email;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Libraries.Middleware;
@@ -44,6 +47,12 @@ namespace LojaVirtual_v2
             services.AddScoped<IImagemRepository, ImagemRepository>();
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
+            /**
+             Auto Mapper
+             */
+
+            services.AddAutoMapper(config => config.AddProfile<MappingProfile>());
+
             //Configuração sessão
 
             services.AddMemoryCache();//guardar os dados na memoria
@@ -71,7 +80,9 @@ namespace LojaVirtual_v2
             });
           
             services.AddScoped<Sessao>();
+            services.AddScoped<LojaVirtual_v2.Libraries.Cookie.Cookie>();
             services.AddScoped<LoginCliente>();
+            services.AddScoped<CarrinhoCompra>();
             services.AddScoped<LoginColaborador>();
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddControllersWithViews(options =>

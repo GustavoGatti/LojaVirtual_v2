@@ -1,4 +1,5 @@
 ﻿using LojaVirtual_v2.Models;
+using LojaVirtual_v2.Models.ProdutoAgregador;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

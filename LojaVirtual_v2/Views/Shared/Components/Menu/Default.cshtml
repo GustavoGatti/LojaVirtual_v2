@@ -53,8 +53,8 @@
             <input type="text" name="pesquisa" value="@pesquisa" class="form-control mr-sm-2" placeholder="Pesquisa">
            
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisa</button>
-            <a class="nav-link" href="/Home/Login"><i class="fas fa-user-alt"></i> Login</a>
-            <a class="nav-link" href="/Home/CarrinhoCompras"><i class="fas fa-shopping-cart"></i> Carrinho</a>
+            <a class="nav-link" asp-controller="Home" asp-action="Login"><i class="fas fa-user-alt"></i> Login</a>
+            <a class="nav-link" asp-controller="CarrinhoCompra" asp-action="Index"><i class="fas fa-shopping-cart"></i> Carrinho</a>
         </form>
     </div>
 </nav>

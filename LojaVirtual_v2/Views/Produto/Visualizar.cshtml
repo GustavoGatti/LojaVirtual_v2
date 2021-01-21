@@ -1,4 +1,4 @@
-﻿@model LojaVirtual_v2.Models.Produto
+﻿@model LojaVirtual_v2.Models.ProdutoAgregador.Produto
 
 @{
     ViewData["Title"] = "VisualizarProduto";
@@ -90,7 +90,7 @@
                                         </dl>
                                     </div>
                                     <hr>
-                                    <a href="#" class="btn btn-outline-primary"> <i class="fa fa-envelope"></i> Adicionar ao Carrinho </a>
+                                    <a asp-controller="CarrinhoCompra" asp-action="AdicionarItem" asp-route-id="@Model.Id" class="btn btn-outline-primary"> <i class="fa fa-envelope"></i> Adicionar ao Carrinho </a>
                                     <hr>
                             </article>
                         </aside>

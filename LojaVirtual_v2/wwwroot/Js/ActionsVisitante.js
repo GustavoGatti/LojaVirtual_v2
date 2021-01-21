@@ -2,7 +2,30 @@
     MoverScroll();
     MudarOrdenacao();
     MudarImagemPrincipalProduto();
-});
+    MudarQuantidadeProdutoCarrinho();
+}); 
+
+function MudarQuantidadeProdutoCarrinho() {
+    $("#order .btn-primary").click(function () {
+        var pai = $(this).parent().parent();
+        if ($(this).hasClass("aumentar")) {
+            LogicaMudarQuantidadeProdutoUnitarioCarrinho("aumentar", $(this));
+            //var id = pai.find(".inputProdutoId").val();
+            //alert("clickou no botao +" + id);
+           
+        }
+        if ($(this).hasClass("diminuir")) {
+            LogicaMudarQuantidadeProdutoUnitarioCarrinho("diminuir", $(this));
+            //var id = pai.find(".inputProdutoId");
+            
+            
+        }
+    });
+}
+
+function LogicaMudarQuantidadeProdutoUnitarioCarrinho(operacao, botao) {
+    //TODO - implementar essa logica
+}
 
 function MudarImagemPrincipalProduto() {
     $(".img-small-wrap img").click(function () {
@@ -45,7 +68,7 @@ function MoverScroll() {
     if (window.location.hash.length > 0) {
         var hash = window.location.hash;
         if (hash == "#posicao-produto") {
-            //window.scrollBy(0, 420);
+            window.scrollBy(0, 420);
         }
     }
 }
