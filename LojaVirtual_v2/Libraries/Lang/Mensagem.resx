@@ -135,6 +135,12 @@
   <data name="MSG_E006" xml:space="preserve">
     <value>O valor do campo {0} não se encontra entre {1} e {2}</value>
   </data>
+  <data name="MSG_E007" xml:space="preserve">
+    <value>Quantidade não pode ser 0, remova o item do carrinho!</value>
+  </data>
+  <data name="MSG_E008" xml:space="preserve">
+    <value>Quantidade de produto solicitada é maior que o estoque deste produto!</value>
+  </data>
   <data name="MSG_S001" xml:space="preserve">
     <value>Registro salvo com sucesso!</value>
   </data>
@@ -146,5 +152,8 @@
   </data>
   <data name="MSG_S004" xml:space="preserve">
     <value>Senha enviada para o email do colaborador com sucesso!</value>
+  </data>
+  <data name="MSG_S005" xml:space="preserve">
+    <value>Operação realizada com sucesso!</value>
   </data>
 </root>

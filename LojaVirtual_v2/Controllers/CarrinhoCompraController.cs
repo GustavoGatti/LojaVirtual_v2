@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LojaVirtual_v2.Libraries.CarrinhoCompra;
+using LojaVirtual_v2.Libraries.Lang;
 using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Models.ProdutoAgregador;
 using LojaVirtual_v2.Repositories.Contracts;
@@ -61,10 +62,22 @@ namespace LojaVirtual_v2.Controllers
      }
         public IActionResult AlterarItem(int id, int quantidade)
         {
-            //TODO - validar se existe essa quantidade no estoque
-            var item = new ProdutoItem() { Id = id, QuantidadeProdutoCarrinho = quantidade };
-            this._carrinhoCompra.Atualizar(item);
-            return RedirectToAction(nameof(Index));
+
+            Produto produto = this._produtoRepository.ObterProduto(id);
+            //Validar se existe essa quantidade no estoque
+            if (quantidade < 1)
+            {
+                return BadRequest(new { mensagem = Mensagem.MSG_E007});   
+            }else if (quantidade > produto.Quantidade)
+            {
+                return BadRequest(new { mensagem = Mensagem.MSG_E008 });
+            }
+            else
+            {
+                var item = new ProdutoItem() { Id = id, QuantidadeProdutoCarrinho = quantidade };
+                this._carrinhoCompra.Atualizar(item);
+                return Ok(new { mensagem = Mensagem.MSG_S005 });
+            }
         }
         public IActionResult RemoverItem(int id)
         {

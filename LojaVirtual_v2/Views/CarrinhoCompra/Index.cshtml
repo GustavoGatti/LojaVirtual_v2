@@ -1,12 +1,17 @@
 ﻿@model List<LojaVirtual_v2.Models.ProdutoAgregador.ProdutoItem>
 @{
     ViewData["Title"] = "Index";
+    decimal Subtotal = 0;
 }
 
 <div class="container">
     <section id="order">
-
+        <br style="clear:both"/>
         <h2 class="title-doc">Carrinho de compras</h2>
+
+        <div class="alert alert-danger" style="display: none" role="alert">
+           
+        </div>
 
         <div id="code_cart">
             <div class="card">
@@ -38,24 +43,28 @@
                                 <td style="width: 15%">
                                     <div style="padding-left: 0px" class="col-auto">
                                         <div class="input-group mb-2">
-                                            <input type="hidden" class="inputProdutoId"  value="@item.Id" />
-                                            <input type="hidden" class="inputQuantidadeEstoque"  value="@item.Quantidade" />
-                                            <input type="hidden" class="inputValorUnitario"  value="@item.Valor" />
+                                            <input type="hidden" class="inputProdutoId" value="@item.Id" />
+                                            <input type="hidden" class="inputQuantidadeEstoque" value="@item.Quantidade" />
+                                            <input type="hidden" class="inputValorUnitario" value="@item.Valor" />
                                             <div class="input-group-prepend">
                                                 <a href="#" class="btn btn-primary diminuir">-</a>
                                             </div>
-                                            <input type="text" readonly="readonly" class="form-control" style="text-align: center" value="@item.QuantidadeProdutoCarrinho">
+                                            <input type="text" readonly="readonly" class="form-control inputQuantidadeProdutoCarrinho" style="text-align: center" value="@item.QuantidadeProdutoCarrinho">
                                             <div class="input-group-append">
                                                 <a href="#" class="btn btn-primary aumentar">+</a>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
+                                @{ 
+                                    var subTotalTemp = item.Valor * item.QuantidadeProdutoCarrinho;
+                                    Subtotal = Subtotal + subTotalTemp;
+                                }
                                 <td>
                                     <div class="price-wrap">
-                                        <var class="price">@((item.Valor * item.QuantidadeProdutoCarrinho).ToString("C"))</var>
+                                        <var class="price">@(subTotalTemp.ToString("C"))</var>
                                         <small class="text-muted">@item.Valor.ToString("C")</small>
-                                    </div> 
+                                    </div>
                                 </td>
                                 <td class="text-right">
                                     <a asp-controller="CarrinhoCompra" asp-action="RemoverItem" asp-route-id="@item.Id" class="btn btn-outline-danger"> × Remove</a>
@@ -64,8 +73,8 @@
                         }
                     </tbody>
                 </table>
-            </div> 
-        </div> 
+            </div>
+        </div>
     </section>
 
 
@@ -103,7 +112,7 @@
                     <div class="box">
                         <dl class="dlist-align">
                             <dt>Subtotal: </dt>
-                            <dd class="text-right">R$ 120,00</dd>
+                            <dd class="text-right subtotal">@Subtotal.ToString("C")</dd>
                         </dl>
                         <dl class="dlist-align">
                             <dt>Frete:</dt>
@@ -111,7 +120,7 @@
                         </dl>
                         <dl class="dlist-align">
                             <dt>TOTAL:</dt>
-                            <dd class="text-right">R$ 186,30</dd>
+                            <dd class="text-right">@(Subtotal.ToString("C"))</dd>
                         </dl>
                     </div> <!-- box.// -->
                 </div> <!-- code-wrap.// -->
