@@ -3,6 +3,7 @@ using LojaVirtual_v2.Database;
 using LojaVirtual_v2.Libraries.AutoMapper;
 using LojaVirtual_v2.Libraries.CarrinhoCompra;
 using LojaVirtual_v2.Libraries.Email;
+using LojaVirtual_v2.Libraries.Gerenciador.Frete;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Libraries.Middleware;
 using LojaVirtual_v2.Libraries.Sessao;
@@ -21,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using WSCorreios;
 
 namespace LojaVirtual_v2
 {
@@ -75,20 +77,32 @@ namespace LojaVirtual_v2
             });
 
             services.AddScoped<GerenciarEmail>();
-            services.AddSession(options=>
+            services.AddSession(options =>
             {
             });
-          
+
+            services.AddScoped<CalcPrecoPrazoWSSoap>(options =>
+            {
+                var servico = new CalcPrecoPrazoWSSoapClient(CalcPrecoPrazoWSSoapClient.EndpointConfiguration.CalcPrecoPrazoWSSoap);
+                return servico;
+            });
             services.AddScoped<Sessao>();
             services.AddScoped<LojaVirtual_v2.Libraries.Cookie.Cookie>();
             services.AddScoped<LoginCliente>();
-            services.AddScoped<CarrinhoCompra>();
+            services.AddScoped<CookieCarrinhoCompra>();
+            services.AddScoped<WSCorreiosCalcularFrete>();
             services.AddScoped<LoginColaborador>();
+            services.AddScoped<CalcularPacote>();
+            services.AddScoped<CookieValorPrazoFrete>();
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddControllersWithViews(options =>
             {
                 options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(x => "O campo deve ser preenchido!");
-            });
+
+            }).AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+             ); 
+
             services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(connection));
         }
 
@@ -109,7 +123,7 @@ namespace LojaVirtual_v2
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
-            
+
             app.UseAuthorization();
             app.UseCookiePolicy();
             app.UseSession();

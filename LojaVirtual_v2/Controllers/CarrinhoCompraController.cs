@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using LojaVirtual_v2.Controllers.Base;
 using LojaVirtual_v2.Libraries.CarrinhoCompra;
+using LojaVirtual_v2.Libraries.Gerenciador.Frete;
 using LojaVirtual_v2.Libraries.Lang;
 using LojaVirtual_v2.Models;
+using LojaVirtual_v2.Models.Constants;
 using LojaVirtual_v2.Models.ProdutoAgregador;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -12,35 +15,25 @@ using System.Threading.Tasks;
 
 namespace LojaVirtual_v2.Controllers
 {
-    public class CarrinhoCompraController : Controller
+    public class CarrinhoCompraController : BaseController
     {
-        private CarrinhoCompra _carrinhoCompra;
-        private IProdutoRepository _produtoRepository;
-        private IMapper _mapper;
-        public CarrinhoCompraController(CarrinhoCompra carrinhoCompra, IProdutoRepository produtoRepository, IMapper mapper)
+
+        public CarrinhoCompraController(CookieCarrinhoCompra carrinhoCompra,
+            IProdutoRepository produtoRepository, IMapper mapper,
+            WSCorreiosCalcularFrete wSCorreios, CalcularPacote calcular,
+            CookieValorPrazoFrete cookieValorPrazoFrete): base(carrinhoCompra, produtoRepository, mapper, wSCorreios, calcular, cookieValorPrazoFrete)
         {
-            this._mapper = mapper;
-            _carrinhoCompra = carrinhoCompra;
-            _produtoRepository = produtoRepository;
+
         }
 
         public IActionResult Index()
         {
-            List<ProdutoItem> produtoItemsNoCarrinho =  this._carrinhoCompra.Consultar();
-            List<ProdutoItem> produtoItemCompleto = new List<ProdutoItem>();
-
-            foreach (var item in produtoItemsNoCarrinho)
-            {
-                //AutoMapper
-
-                Produto produto = this._produtoRepository.ObterProduto(item.Id);
-                ProdutoItem produtoItem = this._mapper.Map<ProdutoItem>(produto);
-                produtoItem.QuantidadeProdutoCarrinho = item.QuantidadeProdutoCarrinho;
-                produtoItemCompleto.Add(produtoItem);
-            }
+            List<ProdutoItem> produtoItemCompleto = CarregarProdutoDB();
 
             return View(produtoItemCompleto);
         }
+
+        
 
         //Item ID = ID do produto
         public IActionResult AdicionarItem(int id)
@@ -83,6 +76,43 @@ namespace LojaVirtual_v2.Controllers
         {
             this._carrinhoCompra.Remover(new ProdutoItem() {Id = id });
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CalcularFrete(int cepDestino)
+        {
+            try
+            {
+                var produto = CarregarProdutoDB();
+                List<Pacote> pacotes = this.CalcularPacote.CalcularPacotesDeProdutos(produto);
+
+                ValorPrazoFrete valorPAC = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.PAC, pacotes);
+                ValorPrazoFrete valorSEDEX = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.SEDEX, pacotes);
+                ValorPrazoFrete valorSEDEX10 = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.SEDEX10, pacotes);
+
+                List<ValorPrazoFrete> lista = new List<ValorPrazoFrete>();
+                if (valorPAC != null)
+                {
+                    lista.Add(valorPAC);
+                }
+                if (valorSEDEX != null)
+                {
+                    lista.Add(valorSEDEX);
+                }
+                if (valorSEDEX10 != null)
+                {
+                    lista.Add(valorSEDEX10);
+                }
+
+
+                this._cookieValorPrazo.Cadastrar(lista);
+                return Ok(lista);
+            }
+            catch (Exception e)
+            {
+                this._cookieValorPrazo.Remover();
+                return BadRequest(e);
+                
+            }
         }
     }
 }

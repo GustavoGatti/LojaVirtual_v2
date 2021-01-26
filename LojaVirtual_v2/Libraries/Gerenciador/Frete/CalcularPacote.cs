@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace LojaVirtual_v2.Libraries.Gerenciador.Frete
 {
     public class CalcularPacote
@@ -12,6 +13,7 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Frete
         public List<Pacote> CalcularPacotesDeProdutos(List<ProdutoItem> produtos)
         {
             List<Pacote> pacotes = new List<Pacote>();
+
             Pacote pacote = new Pacote();
             foreach (var item in produtos)
             {
@@ -21,10 +23,10 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Frete
                     var comprimento = (pacote.Comprimento > item.Comprimento) ? pacote.Comprimento : item.Comprimento;
                     var largura = (pacote.Largura > item.Largura) ? pacote.Largura : item.Largura;
                     var altura = pacote.Altura + item.Altura;
+
                     var dimensao = comprimento + largura + altura;
 
-                    //TODO - Criar novo pacote caso: peso > 30kg, dimensao > 200cm
-                    if (peso > 30 || dimensao > 200)
+                    if (peso > 30 || dimensao > 200 || altura > 105 || comprimento > 105 || largura > 105)
                     {
                         pacotes.Add(pacote);
                         pacote = new Pacote();
@@ -33,12 +35,12 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Frete
                     pacote.Peso = pacote.Peso + item.Peso;
                     pacote.Comprimento = (pacote.Comprimento > item.Comprimento) ? pacote.Comprimento : item.Comprimento;
                     pacote.Largura = (pacote.Largura > item.Largura) ? pacote.Largura : item.Largura;
-                    pacote.Altura = altura = pacote.Altura + item.Altura;
+                    pacote.Altura = pacote.Altura + item.Altura;
 
                 }
-
             }
             pacotes.Add(pacote);
+
             return pacotes;
         }
     }

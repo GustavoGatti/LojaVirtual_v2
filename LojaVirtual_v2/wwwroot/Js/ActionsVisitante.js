@@ -3,6 +3,10 @@
     MudarOrdenacao();
     MudarImagemPrincipalProduto();
     MudarQuantidadeProdutoCarrinho();
+
+    AcaoCalcularFrete();
+    MascaraCEP();
+    AJAXCalcularFrete(false);
 });
 
 function MudarQuantidadeProdutoCarrinho() {
@@ -18,6 +22,77 @@ function MudarQuantidadeProdutoCarrinho() {
 }
 
 
+function MascaraCEP() {
+    $(".cep").mask("00.000-000");
+}
+
+function AcaoCalcularFrete() {
+    $(".btn-calcular-frete").click(function (e) {
+        //Requisição ajax de frete
+        AJAXCalcularFrete(true);
+        e.preventDefault();
+    });
+}
+
+function AJAXCalcularFrete(callByButton) {
+    $(".btn-continuar").addClass("disabled");
+    if (callByButton == false) {
+        if ($.cookie('Carrinho.Cep') != undefined) {
+            $(".cep").val($.cookie('Carrinho.Cep'));
+        }
+    }
+  
+    var cep = $(".cep").val().replace(".", "").replace("-", "");
+    $.removeCookie("Carrinho.TipoFrete");
+    if (cep.length == 8) {
+
+        $.cookie('Carrinho.Cep', $(".cep").val());
+        $(".container-frete").html("<br /><br /><img style:'width: 60px; height: 60px' src='\\img\\preloader.gif'/>");
+        $(".frete").text("R$ 00,00");
+        $(".total").text("R$ 00,00");
+
+        $.ajax({
+            type: "GET",
+            url: "/CarrinhoCompra/CalcularFrete?cepDestino=" + cep,
+            error: function (data) {
+                MostrarMensagemErro("Opps! Tivemos um erro ao obter o Frete ..." + data.Message)
+                console.info(data);
+            },
+            success: function (data) {
+
+                html = "";
+                for (var i = 0; i < data.length; i++) {
+                    var tipoFrete = data[i].tipoFrete;
+                    var valor = data[i].valor;
+                    var prazo = data[i].prazo;
+
+                    html += "<dl class=\"dlist-align\"><dt><input type=\"radio\" name=\"frete\" value=\"" + tipoFrete + "\" /> <input type=\"hidden\" name=\"valor\" value=\""+ valor+"\" /> </dt><dd>" + tipoFrete + " - " + numberToReal(valor) + " (" + prazo + " dias úteis)</dd></dl>";
+                }
+
+                $(".container-frete").html(html);
+                $(".container-frete").find("input[type=radio]").change(function () {
+
+                    $.cookie("Carrinho.TipoFrete", $(this).val());
+                    $(".btn-continuar").removeClass("disabled");
+
+                    var valorFrete = parseFloat($(this).parent().find("input[type=hidden]").val());
+
+                    $(".frete").text(numberToReal(valorFrete));
+                   
+                    var subtotal = parseFloat($(".subtotal").text().replace("R$", "").replace(".", "").replace(",", "."));
+                    var total = valorFrete + subtotal;
+                    $(".total").text(numberToReal(total));
+                });
+                console.info(data);
+            }
+        });
+    } else {
+        if (callByButton) {
+            $(".container-frete").html("");
+            MostrarMensagemErro("Digite o CEP para calcular o frete!");
+        } 
+    }
+}
 
 function OrquestradorDeAcoesProduto(operacao, botao) {
     OcultarMensagemErro();
@@ -40,10 +115,10 @@ function OrquestradorDeAcoesProduto(operacao, botao) {
     /**
      * Chamada de metodos 
      **/
-    AlteracoesVisuaisProdutoCarrinho(produto, operacao); 
+    AlteracoesVisuaisProdutoCarrinho(produto, operacao);
 
     //Validacao
-   
+
 
     //TODO - atualizar o sub valor do produt
 }
@@ -52,17 +127,17 @@ function AlteracoesVisuaisProdutoCarrinho(produto, operacao) {
     if (operacao == "aumentar") {
 
         //if (produto.quantidadeProdutoCarrinhoAntiga != produto.quantidadeEstoque) {
-        
-            produto.quantidadeProdutoCarrinhoNova =  produto.quantidadeProdutoCarrinhoAntiga + 1;
-            AtualizarQuantidadeEValor(produto);
-            AJAXComunicarAlteracaoQuantidadeProduto(produto);
+
+        produto.quantidadeProdutoCarrinhoNova = produto.quantidadeProdutoCarrinhoAntiga + 1;
+        AtualizarQuantidadeEValor(produto);
+        AJAXComunicarAlteracaoQuantidadeProduto(produto);
     } else if (operacao == "diminuir") {
 
         //if (produto.quantidadeProdutoCarrinhoAntiga != 1) {
-          
-            produto.quantidadeProdutoCarrinhoNova =  produto.quantidadeProdutoCarrinhoAntiga - 1;
-            AtualizarQuantidadeEValor(produto);
-            AJAXComunicarAlteracaoQuantidadeProduto(produto);
+
+        produto.quantidadeProdutoCarrinhoNova = produto.quantidadeProdutoCarrinhoAntiga - 1;
+        AtualizarQuantidadeEValor(produto);
+        AJAXComunicarAlteracaoQuantidadeProduto(produto);
     }
 }
 
@@ -77,7 +152,7 @@ function AJAXComunicarAlteracaoQuantidadeProduto(produto) {
             AtualizarQuantidadeEValor(produto);
         },
         success: function () {
-
+            AJAXCalcularFrete();
         }
     });
 }
@@ -92,7 +167,7 @@ function OcultarMensagemErro() {
 }
 
 function AtualizarQuantidadeEValor(produto) {
-    
+
     produto.campoQuantidadeProdutoCarrinho.val(produto.quantidadeProdutoCarrinhoNova);
     var resultado = numberToReal(produto.valorUnitario * produto.quantidadeProdutoCarrinhoNova);
     produto.campoValor.text(resultado);
