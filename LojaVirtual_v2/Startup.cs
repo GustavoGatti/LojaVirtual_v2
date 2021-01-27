@@ -79,6 +79,7 @@ namespace LojaVirtual_v2
             services.AddScoped<GerenciarEmail>();
             services.AddSession(options =>
             {
+                options.Cookie.IsEssential = true;
             });
 
             services.AddScoped<CalcPrecoPrazoWSSoap>(options =>

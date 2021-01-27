@@ -19,16 +19,15 @@ namespace LojaVirtual_v2.Controllers
 {
     public class HomeController : Controller
     {
-        private IClienteRepository _repository;
+      
         private INewletterRepository _newsletterRepository;
-        private LoginCliente _loginCliente;
         private GerenciarEmail _gerenciarEmail;
         private IProdutoRepository _produtoRepository;
-        public HomeController(IProdutoRepository produtoRepository, IClienteRepository repository, INewletterRepository newsletterRepository, LoginCliente loginCliente, GerenciarEmail gerenciarEmail)
+        public HomeController(IProdutoRepository produtoRepository,  INewletterRepository newsletterRepository, GerenciarEmail gerenciarEmail)
         {
-            this._repository = repository;
+          
             this._newsletterRepository = newsletterRepository;
-            this._loginCliente = loginCliente;
+          
             this._gerenciarEmail = gerenciarEmail;
             this._produtoRepository = produtoRepository;
         }
@@ -36,12 +35,12 @@ namespace LojaVirtual_v2.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            
+
             return View();
         }
 
         [HttpPost]
-        public IActionResult Index([FromForm]NewsletterEmail newsletter)
+        public IActionResult Index([FromForm] NewsletterEmail newsletter)
         {
 
             if (ModelState.IsValid)
@@ -49,12 +48,12 @@ namespace LojaVirtual_v2.Controllers
 
                 this._newsletterRepository.Cadastrar(newsletter);
 
-                TempData["MSG_S"] = "E-mail cadastrado! Agora você vai receber promoções especiais no seu e-mail! Fique atento as novidades!";                
+                TempData["MSG_S"] = "E-mail cadastrado! Agora você vai receber promoções especiais no seu e-mail! Fique atento as novidades!";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-               
+
                 return View();
             }
         }
@@ -99,69 +98,8 @@ namespace LojaVirtual_v2.Controllers
                 ViewData["MSG_E"] = "Opps! Tivemos um erro, tente novamente mais tarde";
                 //TODO - Implementar Log
             }
-         
+
             return View("Contato");
-        }
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-
-
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Login([FromForm]Cliente cliente)
-        {
-            Cliente clienteDB = this._repository.Login(cliente.Email, cliente.Senha);
-
-            if (clienteDB != null)
-            {
-                //Fazer Consulta no Banco de dados Email e Senha
-                //Armazenar essa informação na sessão(Cliente)
-
-                this._loginCliente.Login(clienteDB);
-                return new RedirectResult(Url.Action(nameof(Painel)));
-            }
-            else
-            {
-                ViewData["MSG_E"] = "Usuario não encontrado, verifique o email e senha digitado!";
-                return View();
-            }
-           
-        }
-
-        [HttpGet]
-        [ClienteAutorizacao]
-        public IActionResult Painel()
-        {
-            return new ContentResult() { Content = "Este é o painel do cliente" };
-        }
-
-        [HttpGet]
-        public IActionResult CadastroCliente()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult CadastroCliente([FromForm]Cliente cliente)
-        {
-            if (ModelState.IsValid)
-            {
-                this._repository.Cadastrar(cliente);
-
-                TempData["MSG_S"] = "Cadastro realizado com sucesso!";
-
-                return RedirectToAction(nameof(CadastroCliente));
-            }
-            return View();
-        }
-
-        public IActionResult Categoria()
-        {
-            return View();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model List<LojaVirtual_v2.Models.Categoria>
-
+@inject LojaVirtual_v2.Libraries.Login.LoginCliente _loginCliente
 @{
+    //TODO - Pegar apenas o primeiro nome do usuario
     var pesquisa = Context.Request.Query["pesquisa"];
 }
 
@@ -51,9 +52,18 @@
         </ul>
         <form class="form-inline my-2 my-lg-0" method="get">
             <input type="text" name="pesquisa" value="@pesquisa" class="form-control mr-sm-2" placeholder="Pesquisa">
-           
+
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisa</button>
-            <a class="nav-link" asp-controller="Home" asp-action="Login"><i class="fas fa-user-alt"></i> Login</a>
+            @if (_loginCliente.GetCliente() != null)
+            {
+
+                <a class="nav-link" asp-controller="Home" asp-action="Painel" asp-area="Cliente"><i class="fas fa-user-alt"></i>@_loginCliente.GetCliente().Nome</a>
+            }
+            else
+            {
+                <a class="nav-link" asp-controller="Home" asp-action="Login" asp-area="Cliente"><i class="fas fa-user-alt"></i> Entrar</a>
+
+            }
             <a class="nav-link" asp-controller="CarrinhoCompra" asp-action="Index"><i class="fas fa-shopping-cart"></i> Carrinho</a>
         </form>
     </div>

@@ -141,6 +141,9 @@
   <data name="MSG_E008" xml:space="preserve">
     <value>Quantidade de produto solicitada é maior que o estoque deste produto!</value>
   </data>
+  <data name="MSG_E009" xml:space="preserve">
+    <value>Não foi selecionado o tipo de envio!</value>
+  </data>
   <data name="MSG_S001" xml:space="preserve">
     <value>Registro salvo com sucesso!</value>
   </data>

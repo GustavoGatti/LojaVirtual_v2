@@ -19,6 +19,7 @@ namespace LojaVirtual_v2.Libraries.Filtro
             Cliente cliente = this._loginCliente.GetCliente();
             if (cliente == null)
             {
+                //TODO - implementar pagina html bonita para acesso negado
                 context.Result = new ContentResult() { Content = "Acesso negado" };
             }
  

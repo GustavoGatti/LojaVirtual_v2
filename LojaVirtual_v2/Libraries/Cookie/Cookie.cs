@@ -46,11 +46,15 @@ namespace LojaVirtual_v2.Libraries.Cookie
             this._httpContext.HttpContext.Response.Cookies.Delete(Key);
         }
 
-        public string Consultar(string Key)
+        public string Consultar(string Key, bool Cript = true)
         {
-            var ValorCrypt = this._httpContext.HttpContext.Request.Cookies[Key];
-            var Valor = StringCipher.Decrypt(ValorCrypt, this._configuration.GetValue<string>("KeyCrypt"));
-            return Valor;
+            var valor = this._httpContext.HttpContext.Request.Cookies[Key];
+            if (Cript)
+            {
+                valor = StringCipher.Decrypt(valor, this._configuration.GetValue<string>("KeyCrypt"));
+            }
+            
+            return valor;
                 
         }
 

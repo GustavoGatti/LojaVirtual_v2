@@ -1,4 +1,5 @@
 ﻿@model List<LojaVirtual_v2.Models.ProdutoAgregador.ProdutoItem>
+
 @{
     ViewData["Title"] = "Index";
     decimal Subtotal = 0;
@@ -27,15 +28,15 @@
                             </div>
                             <figcaption class="text-wrap align-self-center">
                                 @{
-                                    /*
+                                    
                                     var ResultadoSubtotalItem = item.Valor * item.QuantidadeProdutoCarrinho;
                                     Subtotal = Subtotal + ResultadoSubtotalItem;
-                                */
+                                
                                 }
 
                                 <h6 class="title"><strong>@item.Nome</strong></h6>
                                 <div class="price-wrap">
-                                    <span class="price-new">@item.Valor.ToString("C")</span>
+                                    <span class="price-new">@item.Valor.ToString("C") x @item.QuantidadeProdutoCarrinho = <strong>@ResultadoSubtotalItem.ToString("C")</strong></span>
                                 </div>
                             </figcaption>
                         </figure>
@@ -51,15 +52,17 @@
                     </dl>
                     <dl class="dlist-align">
                         <dt>Frete:</dt>
-                        <dd class="text-right frete"></dd>
+                        <dd class="text-right frete">@ViewBag.Frete.TipoFrete - @ViewBag.Frete.Valor.ToString("C")</dd>
                     </dl>
                     <dl class="dlist-align">
                         <dt>TOTAL:</dt>
                         @{
-                            /*
+                            
                             decimal valorFrete = (decimal)ViewBag.Frete.Valor;
-                        */}
-                        <dd class="text-right total"></dd>
+                        }
+                        <dd class="text-right total">
+                            @((Subtotal + valorFrete).ToString("C"))
+                        </dd>
                     </dl>
                 </div>
             </div>
@@ -88,13 +91,12 @@
                             <div class="tab-pane fade active show" id="nav-tab-card">
                                 <form role="form" method="post">
                                     <div class="form-group">
-                                        <label ></label>
+                                        <label >Titular do cartão:</label>
                                         <input type="text"  class="form-control" placeholder="">
                                         <span ></span>
                                     </div>
                                     <div class="form-group">
-                                        <label ></label>
-
+                                        <label >Número do cartão</label>
                                         <div class="input-group">
                                             <input type="text"  class="form-control" placeholder="">
                                             <div class="input-group-append">
