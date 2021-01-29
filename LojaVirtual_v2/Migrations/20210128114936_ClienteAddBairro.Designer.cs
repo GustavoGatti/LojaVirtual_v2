@@ -4,14 +4,16 @@ using LojaVirtual_v2.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LojaVirtual_v2.Migrations
 {
     [DbContext(typeof(LojaVirtualContext))]
-    partial class LojaVirtualContextModelSnapshot : ModelSnapshot
+    [Migration("20210128114936_ClienteAddBairro")]
+    partial class ClienteAddBairro
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,55 +143,6 @@ namespace LojaVirtual_v2.Migrations
                     b.ToTable("Colaboradores");
                 });
 
-            modelBuilder.Entity("LojaVirtual_v2.Models.EnderecoEntrega", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CEP")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Complemento")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Endereco")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.ToTable("EnderecosEntrega");
-                });
-
             modelBuilder.Entity("LojaVirtual_v2.Models.Imagem", b =>
                 {
                     b.Property<int>("Id")
@@ -278,15 +231,6 @@ namespace LojaVirtual_v2.Migrations
                     b.Navigation("CategoriaPai");
                 });
 
-            modelBuilder.Entity("LojaVirtual_v2.Models.EnderecoEntrega", b =>
-                {
-                    b.HasOne("LojaVirtual_v2.Models.Cliente", "Cliente")
-                        .WithMany("EnderecosEntrega")
-                        .HasForeignKey("ClienteId");
-
-                    b.Navigation("Cliente");
-                });
-
             modelBuilder.Entity("LojaVirtual_v2.Models.Imagem", b =>
                 {
                     b.HasOne("LojaVirtual_v2.Models.ProdutoAgregador.Produto", "Produto")
@@ -307,11 +251,6 @@ namespace LojaVirtual_v2.Migrations
                         .IsRequired();
 
                     b.Navigation("Categoria");
-                });
-
-            modelBuilder.Entity("LojaVirtual_v2.Models.Cliente", b =>
-                {
-                    b.Navigation("EnderecosEntrega");
                 });
 
             modelBuilder.Entity("LojaVirtual_v2.Models.ProdutoAgregador.Produto", b =>

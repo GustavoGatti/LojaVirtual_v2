@@ -37,6 +37,8 @@ namespace LojaVirtual_v2.Models
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E001")]
         public string  Cidade { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E001")]
+        public string Bairro { get; set; }
 
         [Display(Name = "Endereço")]
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E001")]
@@ -70,5 +72,7 @@ namespace LojaVirtual_v2.Models
         [Compare("Senha", ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E005")]
         public string ConfirmarSenha { get; set; }
 
+        [ForeignKey("ClienteId")]
+        public virtual ICollection<EnderecoEntrega> EnderecosEntrega { get; set; }
     }
 }

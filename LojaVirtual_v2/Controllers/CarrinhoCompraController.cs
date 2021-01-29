@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using LojaVirtual_v2.Controllers.Base;
 using LojaVirtual_v2.Libraries.CarrinhoCompra;
+using LojaVirtual_v2.Libraries.Filtro;
 using LojaVirtual_v2.Libraries.Gerenciador.Frete;
 using LojaVirtual_v2.Libraries.Lang;
+using LojaVirtual_v2.Libraries.Login;
+using LojaVirtual_v2.Libraries.Seguranca;
 using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Models.Constants;
 using LojaVirtual_v2.Models.ProdutoAgregador;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +22,13 @@ namespace LojaVirtual_v2.Controllers
     public class CarrinhoCompraController : BaseController
     {
 
-        public CarrinhoCompraController(CookieCarrinhoCompra carrinhoCompra,
-            IProdutoRepository produtoRepository, IMapper mapper,
+        public CarrinhoCompraController(LoginCliente login, CookieCarrinhoCompra carrinhoCompra,
+            IProdutoRepository produtoRepository, IMapper mapper, IEnderecoEntregaRepository endereco,
             WSCorreiosCalcularFrete wSCorreios, CalcularPacote calcular,
-            CookieValorPrazoFrete cookieValorPrazoFrete): base(carrinhoCompra, produtoRepository, mapper, wSCorreios, calcular, cookieValorPrazoFrete)
+            CookieFrete cookieValorPrazoFrete, IEnderecoEntregaRepository enderecoEntrega, LoginCliente loginCliente): base(carrinhoCompra, produtoRepository, mapper, wSCorreios, calcular, cookieValorPrazoFrete, enderecoEntrega, loginCliente)
         {
-
+            
+            
         }
 
         public IActionResult Index()
@@ -78,38 +83,70 @@ namespace LojaVirtual_v2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClienteAutorizacao]
+        public IActionResult EnderecoEntrega()
+        {
+            Cliente cliente = this._login.GetCliente();
+            var enderecos = this._enderecoEntrega.ObterTodosEnderecoEntregaCliente(cliente.Id);
+            ViewBag.Produtos = CarregarProdutoDB();
+            ViewBag.Cliente = cliente;
+            ViewBag.Enderecos = enderecos;
+            return View();
+        }
+
+
         public async Task<IActionResult> CalcularFrete(int cepDestino)
         {
             try
             {
-                var produto = CarregarProdutoDB();
-                List<Pacote> pacotes = this.CalcularPacote.CalcularPacotesDeProdutos(produto);
-
-                ValorPrazoFrete valorPAC = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.PAC, pacotes);
-                ValorPrazoFrete valorSEDEX = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.SEDEX, pacotes);
-                ValorPrazoFrete valorSEDEX10 = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.SEDEX10, pacotes);
-
-                List<ValorPrazoFrete> lista = new List<ValorPrazoFrete>();
-                if (valorPAC != null)
+                
+                //Verifica se existe o calculo do frete e retorna
+                Frete frete = this._cookieFrete.Consultar().Where(x => x.CEP == cepDestino && x.CodCarrinho == GerarHash(this._carrinhoCompra.Consultar())).FirstOrDefault();
+                
+                if(frete != null)
                 {
-                    lista.Add(valorPAC);
+                    return Ok(frete);
                 }
-                if (valorSEDEX != null)
+                else
                 {
-                    lista.Add(valorSEDEX);
-                }
-                if (valorSEDEX10 != null)
-                {
-                    lista.Add(valorSEDEX10);
-                }
+                    var produto = CarregarProdutoDB();
+                    List<Pacote> pacotes = this.CalcularPacote.CalcularPacotesDeProdutos(produto);
 
+                    ValorPrazoFrete valorPAC = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.PAC, pacotes);
+                    ValorPrazoFrete valorSEDEX = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.SEDEX, pacotes);
+                    ValorPrazoFrete valorSEDEX10 = await this._wsCorreios.CalcularFrete(cepDestino.ToString(), TipoFreteConstante.SEDEX10, pacotes);
 
-                this._cookieValorPrazo.Cadastrar(lista);
-                return Ok(lista);
+                    List<ValorPrazoFrete> lista = new List<ValorPrazoFrete>();
+                    if (valorPAC != null)
+                    {
+                        lista.Add(valorPAC);
+                    }
+                    if (valorSEDEX != null)
+                    {
+                        lista.Add(valorSEDEX);
+                    }
+                    if (valorSEDEX10 != null)
+                    {
+                        lista.Add(valorSEDEX10);
+                    }
+
+                    frete = new Frete()
+                    {
+                        CEP = cepDestino,
+                        CodCarrinho = GerarHash(this._carrinhoCompra.Consultar()),
+                        ListaValores = lista
+                    };
+
+                    
+
+                    this._cookieFrete.Cadastrar(frete);
+                    return Ok(frete);
+                }
+                
             }
             catch (Exception e)
             {
-                this._cookieValorPrazo.Remover();
+                //this._cookieValorPrazo.Remover();
                 return BadRequest(e);
                 
             }

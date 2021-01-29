@@ -3,11 +3,115 @@
     MudarOrdenacao();
     MudarImagemPrincipalProduto();
     MudarQuantidadeProdutoCarrinho();
-
+    AJAXBuscarCEP();
     AcaoCalcularFrete();
     MascaraCEP();
     AJAXCalcularFrete(false);
+
+    AJAXEnderecoEntregaCalcularFrete();
+
 });
+
+function AJAXEnderecoEntregaCalcularFrete() {
+    $("input[name=endereco]").change(function () {
+
+        $.cookie("Carrinho.Endereco", $(this).val(), { path: "/" });
+
+        var cep = RemoverMascara($(this).parent().find("input[name=cep]").val());
+
+        EnderecoEntregaCardsLimpar();
+        LimparValores();
+        EnderecoEntregaCardsLoading();
+        $(".btn-continuar").addClass("disabled");
+
+
+        $.ajax({
+            type: "GET",
+            url: "/CarrinhoCompra/CalcularFrete?cepDestino=" + cep,
+            error: function (data) {
+                MostrarMensagemDeErro("Opps! Tivemos um erro ao obter o Frete..." + data.Message);
+
+                EnderecoEntregaCardsLimpar();
+            },
+            success: function (data) {
+                EnderecoEntregaCardsLimpar();
+
+                for (var i = 0; i < data.listaValores.length; i++) {
+                    var tipoFrete = data.listaValores[i].tipoFrete;
+                    var valor = data.listaValores[i].valor;
+                    var prazo = data.listaValores[i].prazo;
+
+                    $(".card-title")[i].innerHTML = "<label for='" + tipoFrete + "'>" + tipoFrete + "</label>";
+                    $(".card-text")[i].innerHTML = "<label for='" + tipoFrete + "'>Prazo de " + prazo + " dias.</label>";
+                    $(".card-footer .text-muted")[i].innerHTML = "<input type=\"radio\" name=\"frete\" value=\"" + tipoFrete + "\" id='" + tipoFrete + "' /> <strong><label for='" + tipoFrete + "'>" + numberToReal(valor) + "</label></strong>";
+
+                    console.info($.cookie("Carrinho.TipoFrete") + " - " + tipoFrete)
+                    console.info($.cookie("Carrinho.TipoFrete") == tipoFrete);
+
+                    if ($.cookie("Carrinho.TipoFrete") != undefined && $.cookie("Carrinho.TipoFrete") == tipoFrete) {
+                        $(".card-footer .text-muted input[name=frete]").eq(i).attr("checked", "checked");
+                        SelecionarTipoFreteStyle($(".card-footer .text-muted input[name=frete]").eq(i));
+
+                        $(".btn-continuar").removeClass("disabled");
+                    }
+                }
+
+                $(".card-footer .text-muted").find("input[name=frete]").change(function () {
+                    $.cookie("Carrinho.TipoFrete", $(this).val(), { path: '/' });
+                    $(".btn-continuar").removeClass("disabled");
+
+                    SelecionarTipoFreteStyle($(this));
+
+                });
+            }
+        });
+    });
+}
+
+
+
+function SelecionarTipoFreteStyle(obj) {
+
+    
+    $(".card-body").css("background-color", "white");
+    $(".card-footer").css("background-color", "rgba(0,0,0,0.03)");
+
+    obj.parent().parent().parent().find(".card-body").css("background-color", "#D7EAFF");
+    obj.parent().parent().parent().find(".card-footer").css("background-color", "#D7EAFF");
+    AtualizarValores();
+}
+
+function AtualizarValores() {
+
+    var produto = parseFloat($(".texto-produto").text().replace("R$", "").replace(".", "").replace(",", "."));
+
+    var frete = parseFloat($(".card-footer input[name=frete]:checked").parent().find("label").text().replace("R$", "").replace(".", "").replace(",", "."));
+
+    var total = produto + frete;
+    
+    $(".texto-frete").text(numberToReal(frete));
+    $(".texto-total").text(numberToReal(total));
+}
+
+function LimparValores() {
+    $(".texto-frete").text("-");
+    $(".texto-total").text("-");
+}
+
+function EnderecoEntregaCardsLoading() {
+    for (var i = 0; i < 3; i++) {
+        $(".card-text")[i].innerHTML = "<br /><br /><img style:'width: 60px; height: 60px' src = '\\img\\preloader.gif' />";
+    }
+}
+
+function EnderecoEntregaCardsLimpar() {
+    for (var i = 0; i < 3; i++) {
+
+        $(".card-title")[i].innerHTML = "-";
+        $(".card-text")[i].innerHTML = "-";
+        $(".card-footer .text-muted")[i].innerHTML = "-";
+    }
+}
 
 function MudarQuantidadeProdutoCarrinho() {
     $("#order .btn-primary").click(function () {
@@ -21,9 +125,42 @@ function MudarQuantidadeProdutoCarrinho() {
     });
 }
 
+function AJAXBuscarCEP() {
+    $("#CEP").keyup(function () {
+        OcultarMensagemErro();
+        if ($(this).val().length == 10) {
+
+            var cep = RemoverMascara($(this).val());
+            $.ajax({
+                type: "GET",
+                url: "https://viacep.com.br/ws/" + cep + "/json/?callback=callback_name",
+                dataType: "jsonp",
+                error: function (data) {
+                    MostrarMensagemErro("Opps! Tivemos um erro na busca pelo CEP! Tente mais tarde!");
+                },
+                success: function (data) {
+                    if (data.erro == undefined) {
+                        $("#Estado").val(data.uf);
+                        $("#Cidade").val(data.localidade);
+                        $("#Complemento").val(data.complemento);
+                        $("#Endereco").val(data.logradouro);
+                        $("#Bairro").val(data.bairro);
+                    } else {
+                        MostrarMensagemErro("O CEP informado não existe!");
+                    }
+
+                }
+            });
+        }
+    });
+}
 
 function MascaraCEP() {
     $(".cep").mask("00.000-000");
+}
+
+function RemoverMascara(valor) {
+    return valor.replace(".", "").replace("-", "");
 }
 
 function AcaoCalcularFrete() {
@@ -41,56 +178,61 @@ function AJAXCalcularFrete(callByButton) {
             $(".cep").val($.cookie('Carrinho.Cep'));
         }
     }
-  
-    var cep = $(".cep").val().replace(".", "").replace("-", "");
-    $.removeCookie("Carrinho.TipoFrete");
-    if (cep.length == 8) {
 
-        $.cookie('Carrinho.Cep', $(".cep").val());
-        $(".container-frete").html("<br /><br /><img style:'width: 60px; height: 60px' src='\\img\\preloader.gif'/>");
-        $(".frete").text("R$ 00,00");
-        $(".total").text("R$ 00,00");
+    if ($(".cep").length > 0) {
 
-        $.ajax({
-            type: "GET",
-            url: "/CarrinhoCompra/CalcularFrete?cepDestino=" + cep,
-            error: function (data) {
-                MostrarMensagemErro("Opps! Tivemos um erro ao obter o Frete ..." + data.Message)
-                console.info(data);
-            },
-            success: function (data) {
 
-                html = "";
-                for (var i = 0; i < data.length; i++) {
-                    var tipoFrete = data[i].tipoFrete;
-                    var valor = data[i].valor;
-                    var prazo = data[i].prazo;
 
-                    html += "<dl class=\"dlist-align\"><dt><input type=\"radio\" name=\"frete\" value=\"" + tipoFrete + "\" /> <input type=\"hidden\" name=\"valor\" value=\""+ valor+"\" /> </dt><dd>" + tipoFrete + " - " + numberToReal(valor) + " (" + prazo + " dias úteis)</dd></dl>";
+        var cep = $(".cep").val().replace(".", "").replace("-", "");
+        $.removeCookie("Carrinho.TipoFrete");
+        if (cep.length == 8) {
+
+            $.cookie('Carrinho.Cep', $(".cep").val());
+            $(".container-frete").html("<br /><br /><img style:'width: 60px; height: 60px' src='\\img\\preloader.gif'/>");
+            $(".frete").text("R$ 00,00");
+            $(".total").text("R$ 00,00");
+
+            $.ajax({
+                type: "GET",
+                url: "/CarrinhoCompra/CalcularFrete?cepDestino=" + cep,
+                error: function (data) {
+                    MostrarMensagemErro("Opps! Tivemos um erro ao obter o Frete ..." + data.Message)
+                    console.info(data);
+                },
+                success: function (data) {
+                    console.info(data);
+                    html = "";
+                    for (var i = 0; i < data.listaValores.length; i++) {
+                        var tipoFrete = data.listaValores[i].tipoFrete;
+                        var valor = data.listaValores[i].valor;
+                        var prazo = data.listaValores[i].prazo;
+
+                        html += "<dl class=\"dlist-align\"><dt><input type=\"radio\" name=\"frete\" value=\"" + tipoFrete + "\" /> <input type=\"hidden\" name=\"valor\" value=\"" + valor + "\" /> </dt><dd>" + tipoFrete + " - " + numberToReal(valor) + " (" + prazo + " dias úteis)</dd></dl>";
+                    }
+
+                    $(".container-frete").html(html);
+                    $(".container-frete").find("input[type=radio]").change(function () {
+
+                        $.cookie("Carrinho.TipoFrete", $(this).val());
+                        $(".btn-continuar").removeClass("disabled");
+
+                        var valorFrete = parseFloat($(this).parent().find("input[type=hidden]").val());
+
+                        $(".frete").text(numberToReal(valorFrete));
+
+                        var subtotal = parseFloat($(".subtotal").text().replace("R$", "").replace(".", "").replace(",", "."));
+                        var total = valorFrete + subtotal;
+                        $(".total").text(numberToReal(total));
+                    });
+                    console.info(data);
                 }
-
-                $(".container-frete").html(html);
-                $(".container-frete").find("input[type=radio]").change(function () {
-
-                    $.cookie("Carrinho.TipoFrete", $(this).val());
-                    $(".btn-continuar").removeClass("disabled");
-
-                    var valorFrete = parseFloat($(this).parent().find("input[type=hidden]").val());
-
-                    $(".frete").text(numberToReal(valorFrete));
-                   
-                    var subtotal = parseFloat($(".subtotal").text().replace("R$", "").replace(".", "").replace(",", "."));
-                    var total = valorFrete + subtotal;
-                    $(".total").text(numberToReal(total));
-                });
-                console.info(data);
+            });
+        } else {
+            if (callByButton) {
+                $(".container-frete").html("");
+                MostrarMensagemErro("Digite o CEP para calcular o frete!");
             }
-        });
-    } else {
-        if (callByButton) {
-            $(".container-frete").html("");
-            MostrarMensagemErro("Digite o CEP para calcular o frete!");
-        } 
+        }
     }
 }
 

@@ -7,6 +7,7 @@ using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Libraries.Filtro;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Repositories;
+using LojaVirtual_v2.Repositories.Contracts;
 
 namespace LojaVirtual_v2.Areas.Cliente.Controllers
 {
@@ -15,11 +16,13 @@ namespace LojaVirtual_v2.Areas.Cliente.Controllers
     {
         private LoginCliente _loginCliente;
         private IClienteRepository _repository;
+        private IEnderecoEntregaRepository _endereco;
 
-        public HomeController(LoginCliente loginCliente, IClienteRepository repository)
+        public HomeController(LoginCliente loginCliente, IClienteRepository repository, IEnderecoEntregaRepository endereco)
         {
             _loginCliente = loginCliente;
             _repository = repository;
+            _endereco = endereco;
         }
 
         public IActionResult Index()
@@ -100,6 +103,36 @@ namespace LojaVirtual_v2.Areas.Cliente.Controllers
 
         public IActionResult Categoria()
         {
+            return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult CadastroEnderecoEntrega()
+        {
+            //TODO melhorar o html do campo Nome
+            //TODO - remover do JS a opção de carregar o cep quando ele esta no cookie para esta tela
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CadastroEnderecoEntrega([FromForm]EnderecoEntrega enderecoentrega, string returnUrl = null)
+        {
+
+            if(ModelState.IsValid)
+            {
+                enderecoentrega.ClienteId = this._loginCliente.GetCliente().Id;
+                this._endereco.Cadastrar(enderecoentrega);
+                if(returnUrl == null)
+                {
+                    //TODO - Listagem de endereco
+                }
+                else
+                {
+                    return LocalRedirectPermanent(returnUrl);
+                }
+            }
+
             return View();
         }
     }

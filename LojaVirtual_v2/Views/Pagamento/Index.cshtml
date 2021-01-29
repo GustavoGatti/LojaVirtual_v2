@@ -1,6 +1,8 @@
-﻿@model List<LojaVirtual_v2.Models.ProdutoAgregador.ProdutoItem>
+﻿@using LojaVirtual_v2.Models;
+@model CartaoCredito;
 
 @{
+
     ViewData["Title"] = "Index";
     decimal Subtotal = 0;
 }
@@ -12,13 +14,13 @@
         <div class="col-md-6">
             <div id="code_itemside_img2">
                 <div class="box items-bordered-wrap">
-                    @foreach (var item in Model)
+                    @foreach (var item in ViewBag.Produtos)
                     {
                         <figure class="itemside">
                             <div class="aside">
                                 @if (item.Imagems.Count > 0)
                                 {
-                                    <img src="@item.Imagems.First().Caminho" class="img-sm">
+                                    <img src="@(((List<Imagem>)item.Imagems).First().Caminho)" class="img-sm">
                                 }
                                 else
                                 {
@@ -28,10 +30,10 @@
                             </div>
                             <figcaption class="text-wrap align-self-center">
                                 @{
-                                    
+
                                     var ResultadoSubtotalItem = item.Valor * item.QuantidadeProdutoCarrinho;
                                     Subtotal = Subtotal + ResultadoSubtotalItem;
-                                
+
                                 }
 
                                 <h6 class="title"><strong>@item.Nome</strong></h6>
@@ -57,7 +59,7 @@
                     <dl class="dlist-align">
                         <dt>TOTAL:</dt>
                         @{
-                            
+
                             decimal valorFrete = (decimal)ViewBag.Frete.Valor;
                         }
                         <dd class="text-right total">
@@ -68,7 +70,7 @@
             </div>
         </div>
         <div class="col-md-6">
-          
+
             <div id="code_payment2">
 
                 <article class="card">
@@ -90,48 +92,51 @@
                         <div class="tab-content">
                             <div class="tab-pane fade active show" id="nav-tab-card">
                                 <form role="form" method="post">
+
                                     <div class="form-group">
-                                        <label >Titular do cartão:</label>
-                                        <input type="text"  class="form-control" placeholder="">
-                                        <span ></span>
+                                        <label asp-for="NomeNoCartao">Nome</label>
+                                        <input type="text" asp-for="NomeNoCartao" class="form-control" placeholder="">
+                                        <span asp-validation-for="NomeNoCartao"></span>
                                     </div>
+
                                     <div class="form-group">
-                                        <label >Número do cartão</label>
+                                        <label asp-for="NumeroCartao">Número</label>
+
                                         <div class="input-group">
-                                            <input type="text"  class="form-control" placeholder="">
+                                            <input type="text" asp-for="NumeroCartao" class="form-control" placeholder="">
                                             <div class="input-group-append">
+
                                                 <span class="input-group-text text-muted">
                                                     <i class="fab fa-cc-visa"></i> &nbsp; <i class="fab fa-cc-amex"></i> &nbsp;
                                                     <i class="fab fa-cc-mastercard"></i>
                                                 </span>
                                             </div>
                                         </div>
-                                        <span ></span>
+
+                                        <span asp-validation-for="NumeroCartao"></span>
                                     </div>
+
+
+
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="form-group">
-                                                <label for="VecimentoMM" class="hidden-xs">Vecimento</label>
+
+                                                <label for="VencimentoMM" class="hidden-xs">Vecimento</label>
                                                 <div class="input-group">
-                                                    <input type="number" class="form-control" placeholder="MM" >
-                                                    <input type="number" class="form-control" placeholder="YY" >
+                                                    <input type="number" class="form-control" asp-for="VencimentoMM" placeholder="MM">
+                                                    <input type="number" class="form-control" asp-for="VencimentoYY" placeholder="YY">
                                                 </div>
-                                                <span ></span>
-                                                <span ></span>
+
+                                                <span asp-validation-for="VencimentoMM"></span>
+                                                <span asp-validation-for="VencimentoYY"></span>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label  data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">Cód. segurança <i class="fa fa-question-circle"></i></label>
-                                                <input type="number" class="form-control" >
-                                                <span ></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label  data-toggle="tooltip" title="">Parcelamento <i class="fa fa-question-circle"></i></label>
-                                                <select class="form-control" ></select>
-                                                <span ></span>
+                                                <label asp-for="CodigoSeguranca" data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">Cód. segurança <i class="fa fa-question-circle"></i></label>
+                                                <input type="number" class="form-control" asp-for="CodigoSeguranca">
+                                                <span asp-validation-for="CodigoSeguranca"></span>
                                             </div>
                                         </div>
                                     </div>

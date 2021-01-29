@@ -1,7 +1,7 @@
 ﻿@model List<LojaVirtual_v2.Models.ProdutoAgregador.ProdutoItem>
 @inject LojaVirtual_v2.Libraries.Login.LoginCliente _loginCliente
 @{
-    ViewData["Title"] = "Pagamento";
+    ViewData["Title"] = "CarrinhoCompras";
     decimal Subtotal = 0;
 }
 
@@ -149,11 +149,11 @@
                         @if (_loginCliente.GetCliente() == null)
                         {
                             //tela login/Cadastro
-                            <a asp-action="Login" asp-controller="Home" asp-area="Cliente" asp-route-returnUrl="@Url.Action("Index", "Pagamento", new { area = ""})" class="btn btn-primary btn-continuar disabled">Continuar</a>
+                            <a asp-action="Login" asp-controller="Home" asp-area="Cliente" asp-route-returnUrl="@Url.Action("EnderecoEntrega", "CarrinhoCompra", new { area = ""})" class="btn btn-primary btn-continuar disabled">Continuar</a>
                         }
                         else
                         {
-                            <a asp-action="Index" asp-controller="Pagamento" class="btn btn-primary btn-continuar disabled">Continuar</a>
+                            <a asp-action="EnderecoEntrega" asp-controller="CarrinhoCompra" class="btn btn-primary btn-continuar disabled">Continuar</a>
                         }
 
                     </div>

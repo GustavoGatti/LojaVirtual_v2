@@ -48,6 +48,7 @@ namespace LojaVirtual_v2
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<IImagemRepository, ImagemRepository>();
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<IEnderecoEntregaRepository, EnderecoEntregaRepository>();
 
             /**
              Auto Mapper
@@ -94,7 +95,7 @@ namespace LojaVirtual_v2
             services.AddScoped<WSCorreiosCalcularFrete>();
             services.AddScoped<LoginColaborador>();
             services.AddScoped<CalcularPacote>();
-            services.AddScoped<CookieValorPrazoFrete>();
+            services.AddScoped<CookieFrete>();
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddControllersWithViews(options =>
             {

@@ -21,6 +21,8 @@ namespace LojaVirtual_v2.Database
        public DbSet<Categoria> Categorias { get; set; }
        public DbSet<Produto> Produtos { get; set; }
        public DbSet<Imagem> Imagems { get; set; }
+       public DbSet<EnderecoEntrega> EnderecosEntrega { get; set; }
+
 
     }
 }

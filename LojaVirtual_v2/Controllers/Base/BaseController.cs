@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using LojaVirtual_v2.Libraries.CarrinhoCompra;
 using LojaVirtual_v2.Libraries.Gerenciador.Frete;
+using LojaVirtual_v2.Libraries.Login;
+using LojaVirtual_v2.Libraries.Seguranca;
 using LojaVirtual_v2.Models.ProdutoAgregador;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,23 +18,28 @@ namespace LojaVirtual_v2.Controllers.Base
     {
 
         protected CookieCarrinhoCompra _carrinhoCompra;
-        protected CookieValorPrazoFrete _cookieValorPrazo;
+        protected CookieFrete _cookieFrete;
         protected IProdutoRepository _produtoRepository;
         protected IMapper _mapper;
         protected WSCorreiosCalcularFrete _wsCorreios;
-        private CalcularPacote calcularPacote;
+        protected CalcularPacote calcularPacote;
+        protected IEnderecoEntregaRepository _enderecoEntrega;
+        protected LoginCliente _login;
 
         public BaseController(CookieCarrinhoCompra carrinhoCompra,
             IProdutoRepository produtoRepository, IMapper mapper,
             WSCorreiosCalcularFrete wSCorreios, CalcularPacote calcular,
-            CookieValorPrazoFrete cookieValorPrazoFrete)
+            CookieFrete cookieValorPrazoFrete, IEnderecoEntregaRepository enderecoEntrega
+            , LoginCliente login)
         {
             this._mapper = mapper;
             _carrinhoCompra = carrinhoCompra;
             _produtoRepository = produtoRepository;
             this._wsCorreios = wSCorreios;
             this.CalcularPacote = calcular;
-            this._cookieValorPrazo = cookieValorPrazoFrete;
+            this._cookieFrete = cookieValorPrazoFrete;
+            this._enderecoEntrega = enderecoEntrega;
+            this._login = login;
         }
 
         protected CalcularPacote CalcularPacote { get => calcularPacote; set => calcularPacote = value; }
@@ -54,5 +62,12 @@ namespace LojaVirtual_v2.Controllers.Base
 
             return produtoItemCompleto;
         }
+    
+        protected string GerarHash(object objeto)
+        {
+            return StringMD5.MD5Hash(JsonConvert.SerializeObject(objeto));
+        }
+
     }
+
 }
