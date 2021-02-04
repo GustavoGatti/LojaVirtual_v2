@@ -45,7 +45,7 @@ function AJAXEnderecoEntregaCalcularFrete() {
                     $(".card-text")[i].innerHTML = "<label for='" + tipoFrete + "'>Prazo de " + prazo + " dias.</label>";
                     $(".card-footer .text-muted")[i].innerHTML = "<input type=\"radio\" name=\"frete\" value=\"" + tipoFrete + "\" id='" + tipoFrete + "' /> <strong><label for='" + tipoFrete + "'>" + numberToReal(valor) + "</label></strong>";
 
-                    console.info($.cookie("Carrinho.TipoFrete") + " - " + tipoFrete)
+                    console.info($.cookie("Carrinho.TipoFrete") + " - " + tipoFrete);
                     console.info($.cookie("Carrinho.TipoFrete") == tipoFrete);
 
                     if ($.cookie("Carrinho.TipoFrete") != undefined && $.cookie("Carrinho.TipoFrete") == tipoFrete) {

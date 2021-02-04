@@ -10,10 +10,7 @@
 <br />
 <br />
 
-@if (TempData["MSG_S"] != null)
-{
-    <p class="alert alert-success">@Html.Raw(TempData["MSG_S"])</p>
-}
+@{ await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml"); }
 
 @if (Model.Count > 0)
 {

@@ -1,8 +1,6 @@
-﻿@using LojaVirtual_v2.Models;
-@model CartaoCredito;
-
+﻿@model LojaVirtual_v2.Models.ViewModels.Pagamento.IndexViewModel
+@using LojaVirtual_v2.Models
 @{
-
     ViewData["Title"] = "Index";
     decimal Subtotal = 0;
 }
@@ -20,23 +18,20 @@
                             <div class="aside">
                                 @if (item.Imagems.Count > 0)
                                 {
-                                    <img src="@(((List<Imagem>)item.Imagems).First().Caminho)" class="img-sm">
+                                 <img src="@(((List<Imagem>)item.Imagems).First().Caminho)" class="img-sm">
                                 }
                                 else
                                 {
-
                                     <img src="~/img/imagem-produto.png" class="img-sm">
                                 }
                             </div>
                             <figcaption class="text-wrap align-self-center">
                                 @{
-
                                     var ResultadoSubtotalItem = item.Valor * item.QuantidadeProdutoCarrinho;
                                     Subtotal = Subtotal + ResultadoSubtotalItem;
-
                                 }
 
-                                <h6 class="title"><strong>@item.Nome</strong></h6>
+                                <h6 class="title"><strong>@item.Nome.ToUpper()</strong></h6>
                                 <div class="price-wrap">
                                     <span class="price-new">@item.Valor.ToString("C") x @item.QuantidadeProdutoCarrinho = <strong>@ResultadoSubtotalItem.ToString("C")</strong></span>
                                 </div>
@@ -59,20 +54,16 @@
                     <dl class="dlist-align">
                         <dt>TOTAL:</dt>
                         @{
-
                             decimal valorFrete = (decimal)ViewBag.Frete.Valor;
                         }
-                        <dd class="text-right total">
-                            @((Subtotal + valorFrete).ToString("C"))
-                        </dd>
+                        <dd class="text-right total">@( (Subtotal + valorFrete).ToString("C")  )</dd>
                     </dl>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-
             <div id="code_payment2">
-
+                @{await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml");}
                 <article class="card">
                     <div class="card-body p-5">
 
@@ -92,53 +83,57 @@
                         <div class="tab-content">
                             <div class="tab-pane fade active show" id="nav-tab-card">
                                 <form role="form" method="post">
-
                                     <div class="form-group">
-                                        <label asp-for="NomeNoCartao">Nome</label>
-                                        <input type="text" asp-for="NomeNoCartao" class="form-control" placeholder="">
-                                        <span asp-validation-for="NomeNoCartao"></span>
+                                        <label asp-for="cartaoCredito.NomeNoCartao"></label>
+                                        <input type="text" asp-for="cartaoCredito.NomeNoCartao" class="form-control" placeholder="">
+                                        <span asp-validation-for="cartaoCredito.NomeNoCartao"></span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label asp-for="NumeroCartao">Número</label>
+                                        <label asp-for="cartaoCredito.NumeroCartao"></label>
 
                                         <div class="input-group">
-                                            <input type="text" asp-for="NumeroCartao" class="form-control" placeholder="">
+                                            <input type="text" asp-for="cartaoCredito.NumeroCartao" class="form-control" placeholder="">
                                             <div class="input-group-append">
-
                                                 <span class="input-group-text text-muted">
                                                     <i class="fab fa-cc-visa"></i> &nbsp; <i class="fab fa-cc-amex"></i> &nbsp;
                                                     <i class="fab fa-cc-mastercard"></i>
                                                 </span>
                                             </div>
                                         </div>
-
-                                        <span asp-validation-for="NumeroCartao"></span>
+                                        <span asp-validation-for="cartaoCredito.NumeroCartao"></span>
                                     </div>
-
-
 
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="form-group">
-
                                                 <label for="VencimentoMM" class="hidden-xs">Vecimento</label>
                                                 <div class="input-group">
-                                                    <input type="number" class="form-control" asp-for="VencimentoMM" placeholder="MM">
-                                                    <input type="number" class="form-control" asp-for="VencimentoYY" placeholder="YY">
+                                                    <input type="number" class="form-control" placeholder="MM" asp-for="cartaoCredito.VencimentoMM">
+                                                    <input type="number" class="form-control" placeholder="YY" asp-for="cartaoCredito.VencimentoYY">
                                                 </div>
-
-                                                <span asp-validation-for="VencimentoMM"></span>
-                                                <span asp-validation-for="VencimentoYY"></span>
+                                                <span asp-validation-for="cartaoCredito.VencimentoMM"></span>
+                                                <span asp-validation-for="cartaoCredito.VencimentoYY"></span>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label asp-for="CodigoSeguranca" data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">Cód. segurança <i class="fa fa-question-circle"></i></label>
-                                                <input type="number" class="form-control" asp-for="CodigoSeguranca">
-                                                <span asp-validation-for="CodigoSeguranca"></span>
+                                                <label asp-for="cartaoCredito.CodigoSeguranca" data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">Cód. segurança <i class="fa fa-question-circle"></i></label>
+                                                <input type="number" class="form-control" asp-for="cartaoCredito.CodigoSeguranca">
+                                                <span asp-validation-for="cartaoCredito.CodigoSeguranca"></span>
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label asp-for=" parcelamento.Numero" data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">Parcelamento <i class="fa fa-question-circle"></i></label>
+                                                <select class="form-control" asp-for="parcelamento.Numero" asp-items="ViewBag.Parcelamento">
+
+                                                </select>
+                                                <span asp-validation-for="parcelamento.Numero"></span>
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <button class="subscribe btn btn-primary btn-block" type="submit"> Confirmar  </button>
                                 </form>

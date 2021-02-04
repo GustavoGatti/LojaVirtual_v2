@@ -4,6 +4,7 @@ using LojaVirtual_v2.Libraries.AutoMapper;
 using LojaVirtual_v2.Libraries.CarrinhoCompra;
 using LojaVirtual_v2.Libraries.Email;
 using LojaVirtual_v2.Libraries.Gerenciador.Frete;
+using LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Libraries.Middleware;
 using LojaVirtual_v2.Libraries.Sessao;
@@ -96,6 +97,7 @@ namespace LojaVirtual_v2
             services.AddScoped<LoginColaborador>();
             services.AddScoped<CalcularPacote>();
             services.AddScoped<CookieFrete>();
+            services.AddScoped<GerenciarPagarMe>();
             string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LojaVirtual;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddControllersWithViews(options =>
             {

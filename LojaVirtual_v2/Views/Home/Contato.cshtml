@@ -44,13 +44,8 @@
                     <article class="card">
                         <div class="card-body p-5">
 
-                            @if (ViewData["MSG_S"] != null)
-                            {
-                                <p class="alert alert-success">@Html.Raw(ViewData["MSG_S"])</p>
-                            }else if (ViewData["MSG_E"] != null)
-                            {
-                                <p class="alert alert-danger">@Html.Raw(ViewData["MSG_E"])</p>
-                            }
+                            @{ await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml"); }
+                            @{ await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml"); }
 
                             <form role="form" method="post" action="/Home/ContatoAcao">
                                 <div class="form-group">

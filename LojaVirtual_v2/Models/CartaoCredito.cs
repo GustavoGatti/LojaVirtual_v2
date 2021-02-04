@@ -9,8 +9,11 @@ namespace LojaVirtual_v2.Models
 {
     public class CartaoCredito
     {
-        [Display(Name = "Número do Cartão")]
+        [Display(Name = "Número cartão")]
         [Required(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E001")]
+        [CreditCard(ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E004")]
+        [MinLength(15, ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E002")]
+        [MaxLength(16, ErrorMessageResourceType = typeof(Mensagem), ErrorMessageResourceName = "MSG_E003")]
         public string NumeroCartao { get; set; }
 
         [Display(Name = "Nome no cartão")]

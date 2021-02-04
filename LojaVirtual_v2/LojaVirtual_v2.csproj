@@ -14,7 +14,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="Pagar.me" Version="2.7.1" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
@@ -42,6 +41,12 @@
     <Folder Include="Areas\Cliente\Models\" />
     <Folder Include="Areas\Colaborador\Models\" />
     <Folder Include="wwwroot\uploads\temp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PagarMeCore">
+      <HintPath>..\..\..\..\Desktop\pagarme-net-master\PagarMeCore\bin\Release\netstandard2.0\PagarMeCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

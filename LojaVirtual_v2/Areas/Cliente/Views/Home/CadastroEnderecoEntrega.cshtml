@@ -21,11 +21,7 @@
                                 <h4 class="card-title mt-2">Cadastro</h4>
                             </header>
                             <article class="card-body">
-                                @if (TempData["MSG_S"] != null)
-                                {
-                                    <p class="alert alert-success">@TempData["MSG_S"]</p>
-                                }
-
+                                @{ await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml"); }
                                 <div class="col form-group">
                                     <label asp-for="Nome">Nome do endereço</label>
                                     <input type="text" asp-for="Nome" class="form-control" placeholder="">

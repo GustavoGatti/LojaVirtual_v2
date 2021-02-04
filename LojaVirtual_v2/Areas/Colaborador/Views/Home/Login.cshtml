@@ -16,10 +16,7 @@
             <div id="code_login_1">
                 <div class="card">
                     <article class="card-body">
-                        @if (ViewData["MSG_E"] != null)
-                        {
-                            <p class="alert alert-danger">@Html.Raw(ViewData["MSG_E"])</p>
-                        }
+                        @{ await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml"); }
                         <h4 class="card-title mb-4 mt-1">Entrar</h4>
                         <form method="post">
                             <div class="form-group">

@@ -22,10 +22,9 @@
             Apresentar o endereco do usuario (session)
             LIstar enderecos vinculados ao usuario (database)
                 -->
-            @if (ViewData["MSG_E"] != null)
-            {
-                <p class="alert alert-danger">@Html.Raw(ViewData["MSG_E"])</p>
-            }
+            @{ await Html.RenderPartialAsync("~/Views/Shared/_Mensagem.cshtml"); }
+
+      
 
             <table class="table table-hover">
                 <tbody>
