@@ -49,7 +49,7 @@ namespace LojaVirtual_v2.Controllers
             {
                 var enderecoEntrega = ObterEndereco();
                 var carrinhoHash = GerarHash(this._carrinhoCompra.Consultar());
-
+              
                 int cep = int.Parse(Mascara.Remover(enderecoEntrega.CEP));
                 List<ProdutoItem> produtoItemCompleto = CarregarProdutoDB();
                 var frete = ObterFrete(cep.ToString());
@@ -85,18 +85,17 @@ namespace LojaVirtual_v2.Controllers
                 ValorPrazoFrete frete = ObterFrete(enderecoEntrega.CEP.ToString());
                 List<ProdutoItem> produtos = CarregarProdutoDB();
 
-                var parcela =  this._gerenciarPagarMe.CalcularPagamentoParcelado(ObterValorTotalCompra(frete, produtos)).Where(x => x.Numero == indexViewModel.parcelamento.Numero);
-
+                var parcela =  this._gerenciarPagarMe.CalcularPagamentoParcelado(ObterValorTotalCompra(frete, produtos)).Where(x => x.Numero == indexViewModel.parcelamento.Numero).FirstOrDefault();
 
                 try
                 {
-                    dynamic pagarmeReposta = this._gerenciarPagarMe.GerarPagCartaoCredito(indexViewModel.cartaoCredito, enderecoEntrega, frete, produtos);
+                    dynamic pagarmeReposta = this._gerenciarPagarMe.GerarPagCartaoCredito(indexViewModel.cartaoCredito, parcela, enderecoEntrega, frete, produtos);
                     return new ContentResult() { Content = "Sucesso!" + pagarmeReposta.TransactionId};
                 }
                 catch (PagarMeException e)
                 {
                     StringBuilder sb = new StringBuilder();
-
+                    
                     if (e.Error.Errors.Count() > 0)
                     {
                         sb.Append("Erro no pagamento: ");
@@ -137,7 +136,7 @@ namespace LojaVirtual_v2.Controllers
             }
             else
             {
-                var Endereco = this._enderecoEntrega.ObterEnderecoEntrega(EnderecoEntregaId);
+                enderecoEntrega = this._enderecoEntrega.ObterEnderecoEntrega(EnderecoEntregaId);
             }
             return enderecoEntrega;
         }

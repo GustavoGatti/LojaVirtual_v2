@@ -45,7 +45,7 @@
 
   <ItemGroup>
     <Reference Include="PagarMeCore">
-      <HintPath>..\..\..\..\Desktop\pagarme-net-master\PagarMeCore\bin\Release\netstandard2.0\PagarMeCore.dll</HintPath>
+      <HintPath>..\pagarme-net-master\PagarMeCore\bin\Release\netstandard2.0\PagarMeCore.dll</HintPath>
     </Reference>
   </ItemGroup>
 

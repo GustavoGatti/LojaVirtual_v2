@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-
 using Microsoft.Extensions.Configuration;
 using LojaVirtual_v2.Libraries.Login;
 using LojaVirtual_v2.Models;
@@ -83,7 +82,7 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
            
         }
 
-        public object GerarPagCartaoCredito(CartaoCredito cartao, EnderecoEntrega enderecoEntrega, ValorPrazoFrete frete, List<ProdutoItem> produtos)
+        public object GerarPagCartaoCredito(CartaoCredito cartao, Parcelamento parcelamento, EnderecoEntrega enderecoEntrega, ValorPrazoFrete frete, List<ProdutoItem> produtos)
         {
 
             Cliente cliente = this._loginCliente.GetCliente();
@@ -146,7 +145,7 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
             };
 
             var Today = DateTime.Now;
-            decimal Total = Convert.ToDecimal(frete.Valor);
+            
             // Converter corretamente o valor para a API do pagar.me
             transaction.Shipping = new Shipping
             {
@@ -180,14 +179,14 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
                     Tangible = true,
                     UnitPrice = Mascara.ConverterValorPagarMe(item.Valor)
                 };
-                Total += (item.Valor * item.QuantidadeProdutoCarrinho);
+               
                 itens[i] = itemA;
 
             }
 
             transaction.Item = itens;
-            transaction.Amount = Mascara.ConverterValorPagarMe(Total);
-
+            transaction.Amount = Mascara.ConverterValorPagarMe(parcelamento.Valor);
+            transaction.Installments = parcelamento.Numero;
             transaction.Save();
             return new { TransactionId = transaction.Id };
         }
@@ -200,7 +199,7 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
             int parcelasVendedor = this._configuration.GetValue<int>("Pagamento:PagarMe:ParcelasVendedor");
             decimal Juros = this._configuration.GetValue<decimal>("Pagamento:PagarMe:Juros");
 
-            for (int i=0; i < numParcelas; i++)
+            for (int i=1; i <= numParcelas; i++)
             {
                 Parcelamento parcelamento = new Parcelamento();
                 parcelamento.Numero = i;
@@ -212,7 +211,7 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
                     decimal valorDoJuros = valor * 5 / 100;
 
                     parcelamento.Valor =   qtdParcelasComJuros* valorDoJuros + valor;
-                    parcelamento.ValorPorParcela = parcelamento.Valor / parcelamento.Valor;
+                    parcelamento.ValorPorParcela = parcelamento.Valor / parcelamento.Numero;
                     parcelamento.Juros = true;
 
                 }
@@ -229,5 +228,4 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
         }
         
     }
-
 }

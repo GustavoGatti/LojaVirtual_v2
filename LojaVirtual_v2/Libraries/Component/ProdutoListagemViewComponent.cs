@@ -1,8 +1,6 @@
-﻿
-
-  
-using LojaVirtual_v2.Models;
+﻿using LojaVirtual_v2.Models;
 using LojaVirtual_v2.Models.ViewModels;
+using LojaVirtual_v2.Models.ViewModels.Components;
 using LojaVirtual_v2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System;
