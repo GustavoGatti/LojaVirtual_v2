@@ -27,10 +27,9 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
         //gugostoso23@gmail.com
         //4khJa8rpP^!U
         
-        public object GerarBoleto(decimal valor)
+        public Transaction GerarBoleto(decimal valor)
         {
-            try
-            {
+            
                 Cliente cliente = this._loginCliente.GetCliente();
                 PagarMeService.DefaultApiKey = this._configuration.GetValue<string>("Pagamento:PagarMe:ApiKey");
                 PagarMeService.DefaultEncryptionKey = this._configuration.GetValue<string>("Pagamento:PagarMe:EncryptionKey");
@@ -68,21 +67,11 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
 
                 transaction.Save();
 
-                return new
-                {
-                    BoletoURL = transaction.BoletoUrl,
-                    BarCode = transaction.BoletoBarcode,
-                    Expiracao = transaction.BoletoExpirationDate,
-                };
-            }
-            catch (Exception e)
-            {
-                return new { Erro = e.Message};
-            }
-           
+                return transaction;
+       
         }
 
-        public object GerarPagCartaoCredito(CartaoCredito cartao, Parcelamento parcelamento, EnderecoEntrega enderecoEntrega, ValorPrazoFrete frete, List<ProdutoItem> produtos)
+        public Transaction GerarPagCartaoCredito(CartaoCredito cartao, Parcelamento parcelamento, EnderecoEntrega enderecoEntrega, ValorPrazoFrete frete, List<ProdutoItem> produtos)
         {
 
             Cliente cliente = this._loginCliente.GetCliente();
@@ -167,7 +156,6 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
 
             Item[] itens = new Item[produtos.Count];
             
-            // Converter corretamente o valor para a API do pagar.me
             for (var i = 0; i < produtos.Count; i++)
             {
                 var item = produtos[i];
@@ -188,7 +176,7 @@ namespace LojaVirtual_v2.Libraries.Gerenciador.Pagamento.PagarMe
             transaction.Amount = Mascara.ConverterValorPagarMe(parcelamento.Valor);
             transaction.Installments = parcelamento.Numero;
             transaction.Save();
-            return new { TransactionId = transaction.Id };
+            return transaction;
         }
 
         public List<Parcelamento> CalcularPagamentoParcelado(decimal valor)
